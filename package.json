@@ -1,12 +1,12 @@
 {
-  "name": "express-require-routes",
+  "name": "express-import-routes",
   "description": "Auto import your routes like Nuxt.js",
   "author": "Nguyen Thanh",
   "version": "0.0.1",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/nguyenthanh1995/express-requrie-routes.git"
+    "url": "git://github.com/nguyenthanh1995/express-import-routes.git"
   },
   "main": "./src/index.js",
   "engines": {
