@@ -35,7 +35,7 @@ function readerRoutes(url) {
         const children = readerRoutes(pathJoined);
         const id = parseIdRouter(child);
 
-        let name = `${id}`;
+        let name = id === "/" ? "/index" : `${id}`;
 
         return children.map((item) => {
           return {
