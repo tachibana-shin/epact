@@ -2,6 +2,8 @@
 
 This plugin will remove the way you think about importing routers for expressjs
 
+[View example](./example)
+
 ## Usage
 
 ```
