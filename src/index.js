@@ -4,8 +4,16 @@ const express = require("express");
 
 function requireRouter(id) {
   try {
-    return require(path.resolve("./", id));
-  } catch (e) {}
+    return {
+      error: false,
+      module: require(path.resolve("./", id)),
+    };
+  } catch (e) {
+    return {
+      error: true,
+      message: e,
+    };
+  }
 }
 
 function parseIdRouter(name) {
@@ -72,25 +80,29 @@ function loadRoutes(url = "./routes") {
 
   const router = express.Router();
 
-  routes.forEach((route) => {
-    if (route.module.constructor === express.Router) {
-      router.use(route.name, route.module);
+  routes.forEach(({ name, module: { error, message, module } }) => {
+    if (error === true) {
+      console.error(message);
     } else {
-      const createRoute = router.route(route.name);
+      if (module?.constructor === express.Router) {
+        router.use(name, module);
+      } else {
+        const createRoute = router.route(name);
 
-      METHODS.forEach((method) => {
-        if (route.module[method]) {
-          if (Array.isArray(route.module[method])) {
-            createRoute[method](...route.module[method]);
-          } else {
-            createRoute[method](route.module[method]);
+        METHODS.forEach((method) => {
+          if (module[method]) {
+            if (Array.isArray(module[method])) {
+              createRoute[method](...module[method]);
+            } else {
+              createRoute[method](module[method]);
+            }
           }
-        }
-      });
+        });
+      }
     }
   });
 
-  return router
+  return router;
 }
 
-module.exports = loadRoutes
+module.exports = loadRoutes;
