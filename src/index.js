@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
+const chalk = require("chalk");
 
 function requireRouter(id) {
   try {
@@ -10,6 +11,7 @@ function requireRouter(id) {
     };
   } catch (e) {
     return {
+      path: require(path.resolve("./", id)),
       error: true,
       message: e,
     };
@@ -74,14 +76,41 @@ function readerRoutes(url) {
     .flat(Infinity);
 }
 
-const METHODS = ["get", "post", "put", "delete", "options"];
+const METHODS = [
+  "all",
+  "checkout",
+  "copy",
+  "delete",
+  "get",
+  "head",
+  "lock",
+  "m-search",
+  "merge",
+  "mkactivity",
+  "mkcol",
+  "move",
+  "notify",
+  "options",
+  "patch",
+  "post",
+  "purge",
+  "put",
+  "report",
+  "search",
+  "subscribe",
+  "trace",
+  "unlock",
+  "unsubscribe",
+];
+
 function loadRoutes(url = "./routes") {
   const routes = readerRoutes(url);
 
   const router = express.Router();
 
-  routes.forEach(({ name, module: { error, message, module } }) => {
+  routes.forEach(({ name, module: { path, error, message, module } }) => {
     if (error === true) {
+      console.log(chalk.red(`Module "${name}" from "${path}" error:`));
       console.error(message);
     } else {
       if (module?.constructor === express.Router) {
