@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
-const chalk = require("chalk");
 
 function requireRouter(id) {
   try {
@@ -110,7 +109,6 @@ function loadRoutes(url = "./routes") {
 
   routes.forEach(({ name, module: { path, error, message, module } }) => {
     if (error === true) {
-      console.log(chalk.red(`Module "${name}" from "${path}" error:`));
       console.error(message);
     } else {
       if (module?.constructor === express.Router) {
