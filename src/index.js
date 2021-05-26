@@ -205,7 +205,7 @@ module.exports = loadRoutes;
  * @param  {(request: Request, response: Response, next?: NextFunction) => void} middleware
  * @return {void}
  */
-exports.registerMiddleware = (name, middleware) => {
+module.exports.registerMiddleware = function registerMiddleware(name, middleware) {
   if (middlewareInstalled.has(name)) {
     console.warn(chalk.yellow(message(`"${name}" middleware already exists.`)));
   }
@@ -226,7 +226,7 @@ exports.registerMiddleware = (name, middleware) => {
  * @param  {Router|(request: Request, response: Response, next?: NextFunction): void|Object} route
  * @return {Router}
  */
-exports.registerRoute = (path, route) => {
+module.exports.registerRoute = function registerRoute(path, route) {
   const routeExpress = Router();
 
   if (path?.constructor === Router) {
