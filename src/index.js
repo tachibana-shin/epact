@@ -1,19 +1,30 @@
 const fs = require("fs");
 const path = require("path");
-const express = require("express");
+const { Router } = require("express");
 const chalk = require("chalk");
+const rootPath = require("app-root-path").toString();
+const middlewareInstalled = new Map();
 
-function requireRouter(id) {
+function message(text) {
+  return `express-import-routes: ${text}`;
+}
+
+function requireModule(id) {
+  const pathJoined = path.join(rootPath, id);
+
   try {
     return {
       error: false,
-      module: require(path.resolve("./", id)),
+      message: null,
+      module: require(pathJoined),
+      pathJoined,
     };
   } catch (e) {
     return {
-      path: require(path.resolve("./", id)),
       error: true,
       message: e,
+      module: null,
+      pathJoined,
     };
   }
 }
@@ -54,26 +65,59 @@ function readerRoutes(url) {
           };
         });
       } else {
-        try {
-          const id = parseIdRouter(child);
+        const id = parseIdRouter(child);
 
-          let name = "";
-          if (hasParam(id)) {
-            name = `${id}?`;
-          } else {
-            name = `${id}`;
-          }
-
-          return {
-            name,
-            module: requireRouter(pathJoined),
-          };
-        } catch (error) {
-          throw error;
+        let name = "";
+        if (hasParam(id)) {
+          name = `${id}?`;
+        } else {
+          name = `${id}`;
         }
+
+        return {
+          name,
+          module: requireModule(pathJoined),
+        };
       }
     })
     .flat(Infinity);
+}
+
+function loadMiddleware(pathOrNameOrMiddle) {
+  if (middlewareInstalled.has(pathOrNameOrMiddle)) {
+    return middlewareInstalled.get(pathOrNameOrMiddle);
+  }
+
+  if (typeof pathOrNameOrMiddle === "function") {
+    return pathOrNameOrMiddle;
+  }
+
+  const { module, error, message, pathJoined } = requireModule(
+    path.join("middleware", pathOrNameOrMiddle)
+  );
+
+  if (error === true) {
+    console.log(
+      chalk.red(
+        `Middleware "${pathOrNameOrMiddle}" from "${pathJoined}" error:`
+      )
+    );
+    console.error(message);
+  }
+
+  return module;
+}
+
+function toArray(template) {
+  if (Array.isArray(template)) {
+    return template;
+  }
+
+  if (template) {
+    return [template];
+  }
+
+  return [];
 }
 
 const METHODS = [
@@ -102,28 +146,49 @@ const METHODS = [
   "unlock",
   "unsubscribe",
 ];
-
+/**
+ * @param  {string="./routes"} path
+ * @return {Router}
+ */
 function loadRoutes(url = "./routes") {
   const routes = readerRoutes(url);
 
-  const router = express.Router();
+  const router = Router();
 
   routes.forEach(({ name, module: { path, error, message, module } }) => {
     if (error === true) {
       console.log(chalk.red(`Module "${name}" from "${path}" error:`));
       console.error(message);
     } else {
-      if (module?.constructor === express.Router) {
-        router.use(name, module);
+      const middleware = toArray(module.middleware).map((middle) =>
+        loadMiddleware(middle)
+      );
+
+      if (module?.constructor === Router) {
+        if (middleware.length > 0) {
+          const cloneRouter = Router();
+
+          middleware.forEach((middle) => {
+            cloneRouter.use(middle);
+          });
+          cloneRouter.use(module);
+
+          router.use(name, cloneRouter);
+        } else {
+          router.use(name, module);
+        }
       } else {
-        const createRoute = router.route(name);
+        const route = router.route(name);
 
         METHODS.forEach((method) => {
           if (module[method]) {
             if (Array.isArray(module[method])) {
-              createRoute[method](...module[method]);
+              route[method](
+                ...middleware,
+                ...module[method].map((middle) => loadMiddleware(middle))
+              );
             } else {
-              createRoute[method](module[method]);
+              route[method](...middleware, module[method]);
             }
           }
         });
@@ -135,3 +200,51 @@ function loadRoutes(url = "./routes") {
 }
 
 module.exports = loadRoutes;
+
+/**
+ * @param  {string|object|symbol} name
+ * @param  {(request: Request, response: Response, next?: NextFunction) => void} middleware
+ * @return {void}
+ */
+exports.registerMiddleware = (name, middleware) => {
+  if (middlewareInstalled.has(name)) {
+    console.warn(chalk.yellow(message(`"${name}" middleware already exists.`)));
+  }
+
+  if (typeof middleware === "function") {
+    console.error(
+      chalk.red(
+        message(`(process install ${name}) a middleware must be a function.`)
+      )
+    );
+  }
+
+  middlewareInstalled.set(name, middleware);
+};
+
+/**
+ * @param  {string|Router} path
+ * @param  {Router|(request: Request, response: Response, next?: NextFunction): void|Object} route
+ * @return {Router}
+ */
+exports.registerRoute = (path, route) => {
+  const routeExpress = Router();
+
+  if (path?.constructor === Router) {
+    routeExpress.use(path);
+  }
+  if (route?.constructor === Router) {
+    routeExpress.use(route);
+  }
+  if (typeof route === "function") {
+    routeExpress.route(path).all(route);
+  }
+
+  METHODS.forEach((method) => {
+    if (method in route) {
+      routeExpress.route(path)[method](route[method]);
+    }
+  });
+
+  return routeExpress;
+};

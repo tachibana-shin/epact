@@ -2,6 +2,11 @@
 
 This plugin will remove the way you think about importing routers for expressjs
 
+## 0.0.2-b5 What news?
+- Better support middleware access.
+- Using the [app-root-path](https://www.npmjs.com/package/app-root-path) package ensures the transparency of the paths.
+- Add a custom router and middleware registry.
+
 [View example](./example)
 
 ## Usage
@@ -96,4 +101,63 @@ exports.post = [upload.single('avatar'), function (req, res) {
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
 }]
+```
+
+## Middleware
+
+Add stronger support with middleware.
+
+You can now export the middleware to tell the plugin that you want it to apply the middleware to this route.
+
+``` js
+exports.middleware = ["auth"]
+
+exports.get = (req, res) => {
+  req.end(`Welcome back ${req.user.name}!`)
+}
+```
+
+middleware/auth.js
+``` js
+module.exports = (req, res, next) => {
+  try {
+    if ( req.headers.authorization ) {
+      req.user = jwt.verify(req.headers.authorization, SERKET_KEY)
+      next()
+    } else {
+      throw new Error("NO_TOKEN")
+    }
+  } catch(err) {
+    console.log( err )
+    next("route")
+  }
+}
+```
+
+## Register 
+
+I added 2 methods for you to register the plugin to know this is a custom method. it can also combine with other modules like multer.
+
+app.js
+``` js
+const express = require("express")
+const multer = require("multer")
+const importRoutes = require("express-import-routes")
+const { registerMiddleware } = importRoutes
+
+const app = express()
+
+const upload = multer({ dest: "uploads/" })
+
+registerMiddleware("file-avatar", upload.single("avatar"))
+
+app.use(importRoutes())
+
+app.listen(8080, err => {
+  if ( err ) {
+    console.error(err)
+  } else {
+    console.log("App it runing on port 8080.")
+  }
+})
 ```

@@ -1,3 +1,5 @@
+exports.middleware = ["auth"];
+
 exports.get = (req, res) => {
-  res.render('index', { title: 'Express' });
-}
+  res.render("index", { title: "Express" });
+};
