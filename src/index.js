@@ -155,9 +155,8 @@ function loadRoutes(url = "./routes") {
 
   const router = Router();
 
-  routes.forEach(({ name, module: { path, error, message, module } }) => {
+  routes.forEach(({ name, module: { error, message, module } }) => {
     if (error === true) {
-      console.log(chalk.red(`Module "${name}" from "${path}" error:`));
       console.error(message);
     } else {
       const middleware = toArray(module.middleware).map((middle) =>
