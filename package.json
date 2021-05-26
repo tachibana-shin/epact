@@ -2,7 +2,7 @@
   "name": "express-import-routes",
   "description": "Auto import your routes like Nuxt.js",
   "author": "Nguyen Thanh",
-  "version": "0.0.2-b4",
+  "version": "0.0.2-b5",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -22,9 +22,11 @@
     "require routes",
     "import routes",
     "auto import",
-    "express-require-routes"
+    "express-require-routes",
+    "middleware"
   ],
   "dependencies": {
+    "app-root-path": "^3.0.0",
     "express": "^4.17.1"
   }
 }
