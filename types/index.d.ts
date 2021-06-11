@@ -11,3 +11,5 @@ export function registerRoute(
     | { (request: Request, response: Response, next?: NextFunction): void }
     | Object
 ): Router;
+
+export const METHODS: string[];

@@ -41,6 +41,11 @@ amdefine@>=0.0.4:
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
   integrity sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU=
 
+app-root-path@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/app-root-path/-/app-root-path-3.0.0.tgz#210b6f43873227e18a4b810a032283311555d5ad"
+  integrity sha512-qMcx+Gy2UZynHjOHOIXPNvpf+9cjvk3cWrBBK7zg4gH9+clobJRb9NGzcT7mQTcV/6Gm/1WelUtqxVXnNlrwcw==
+
 array-flatten@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-1.1.1.tgz#9a5f699051b1e7073328f2a008968b64ea2955d2"
@@ -254,11 +259,12 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-express-import-routes@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/express-import-routes/-/express-import-routes-0.0.2.tgz#08faabcead321c316b6cf9740c89df037d22fa0b"
-  integrity sha512-hYLHebgX3uSor/8Olo+3noomlFieqXjjnOyHdMu6e0JQ0r76Bn8+QRuLovpq6KAn3kLbK8+yVpDL/34mGBDchw==
+express-import-routes@^0.0.2-b6:
+  version "0.0.2-b6"
+  resolved "https://registry.yarnpkg.com/express-import-routes/-/express-import-routes-0.0.2-b6.tgz#d5b58ed1fc2e976c0f3189533cc7afc7c1999ea6"
+  integrity sha512-qZ3I398GZdDp5ntjBbVW8z2auCuFbgGmCTwNK+29UkLNhsxV0pTwEwcNGau76XW6f4kp5YhK8sfn0mRGtwF/ow==
   dependencies:
+    app-root-path "^3.0.0"
     express "^4.17.1"
 
 express@^4.17.1:

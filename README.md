@@ -105,7 +105,7 @@ exports.post = [upload.single('avatar'), function (req, res) {
 
 ## Middleware
 
-Add stronger support with middleware.
+### Add stronger support with middleware.
 
 You can now export the middleware to tell the plugin that you want it to apply the middleware to this route.
 
@@ -133,6 +133,33 @@ module.exports = (req, res, next) => {
   }
 }
 ```
+
+### Specify local middleware
+
+You can now specify each middleware for each router.
+
+``` js
+const upload = multer({ dest: 'uploads/' })
+
+exports.post = [upload.single('avatar'), function (req, res) {
+  // req.file is the `avatar` file
+  // req.body will hold the text fields, if there were any
+}]
+```
+
+or
+
+``` js
+exports.middleware = {
+  post: upload.single('avatar'),
+}
+
+exports.post = function (req, res) {
+  // req.file is the `avatar` file
+  // req.body will hold the text fields, if there were any
+}
+```
+
 
 ## Register 
 

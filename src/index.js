@@ -134,6 +134,10 @@ function loadMiddleware(pathOrNameOrMiddle) {
   return module;
 }
 
+function mergeArray(...params) {
+  return params.map((arr) => toArray(arr)).flat();
+}
+
 function toArray(template) {
   if (typeof template === "string") {
     template = template.split("|");
@@ -164,10 +168,16 @@ function flatMiddleware(middlewares) {
   }
 
   METHODS.forEach((method) => {
-    if (method in middlewares) {
-      result[method.toUpperCase()] = toArray(middlewares[method]).map(
-        (middleware) =>
+    const nameUpper = method.toUpperCase();
+    if (method in middlewares || nameUpper in middlewares) {
+      result[method.toUpperCase()] = mergeArray(
+        result[method.toUpperCase()],
+        [
+          ...toArray(middlewares[method]),
+          ...toArray(middlewares[nameUpper]),
+        ].map((middleware) =>
           fakeMiddleware(method.toUpperCase(), loadMiddleware(middleware))
+        )
       );
     }
   });
@@ -188,26 +198,26 @@ function fakeMiddleware(method, callback) {
   };
 }
 
-function createVirualRouter(module) {
+function createVirualRouter(module, pathJoined) {
   const middlewares = flatMiddleware(module.middleware);
   const virualRouter = Router();
+  const routeRootFromVirual = virualRouter.route("/");
 
   /// if module export Router
   if (module?.constructor === Router) {
     METHODS.forEach((method) => {
       method = method.toUpperCase();
       if (method in middlewares) {
-        virualRouter.use(...middlewares[method]);
+        routeRootFromVirual[method.toLowerCase()](...middlewares[method]);
       }
     });
 
     virualRouter.use(module);
   } else {
     /// use middleware all
-    if ("ALL" in middlewares) {
-      virualRouter.use(...middlewares.ALL);
-    }
-    const routeRootFromVirual = virualRouter.route("/");
+    // if ("ALL" in middlewares) {
+    //   virualRouter.use("/", ...middlewares.ALL);
+    // }
 
     METHODS.forEach((method) => {
       method = method.toUpperCase();
@@ -220,6 +230,7 @@ function createVirualRouter(module) {
           Array.isArray(methodFunction)
         ) {
           routeRootFromVirual[method.toLowerCase()](
+            ...(middlewares.ALL || []),
             ...(method in middlewares ? middlewares[method] : []),
             ...toArray(methodFunction)
           );
@@ -227,7 +238,7 @@ function createVirualRouter(module) {
           console.error(
             chalk.red(
               message(
-                `router "${module.pathJoined} exported "${method}" unknown type.`
+                `router "${pathJoined} exported "${method}" unknown type.`
               )
             )
           );
@@ -248,11 +259,11 @@ module.exports = function loadRoutes(url = "./routes") {
 
   const router = Router();
 
-  routes.forEach(({ name, module: { error, message, module } }) => {
+  routes.forEach(({ name, module: { pathJoined, error, message, module } }) => {
     if (error === true) {
       console.error(message);
     } else {
-      const virualRouter = createVirualRouter(module);
+      const virualRouter = createVirualRouter(module, pathJoined);
       router.use(name, virualRouter);
     }
   });
