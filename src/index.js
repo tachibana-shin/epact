@@ -153,7 +153,7 @@ function toArray(template) {
 function flatMiddleware(middlewares) {
   const result = Object.create(null);
 
-  if (!middldeware) {
+  if (!middlewares) {
     return result;
   }
 
