@@ -4,6 +4,32 @@ const { Router } = require("express");
 const chalk = require("chalk");
 const rootPath = require("app-root-path").toString();
 const middlewareInstalled = new Map();
+const METHODS = [
+  "all",
+  "checkout",
+  "copy",
+  "delete",
+  "get",
+  "head",
+  "lock",
+  "m-search",
+  "merge",
+  "mkactivity",
+  "mkcol",
+  "move",
+  "notify",
+  "options",
+  "patch",
+  "post",
+  "purge",
+  "put",
+  "report",
+  "search",
+  "subscribe",
+  "trace",
+  "unlock",
+  "unsubscribe",
+];
 
 function message(text) {
   return `express-import-routes: ${text}`;
@@ -109,48 +135,115 @@ function loadMiddleware(pathOrNameOrMiddle) {
 }
 
 function toArray(template) {
+  if (typeof template === "string") {
+    template = template.split("|");
+  }
+
   if (Array.isArray(template)) {
     return template;
   }
 
-  if (template) {
+  if (!!template) {
     return [template];
   }
 
   return [];
 }
 
-const METHODS = [
-  "all",
-  "checkout",
-  "copy",
-  "delete",
-  "get",
-  "head",
-  "lock",
-  "m-search",
-  "merge",
-  "mkactivity",
-  "mkcol",
-  "move",
-  "notify",
-  "options",
-  "patch",
-  "post",
-  "purge",
-  "put",
-  "report",
-  "search",
-  "subscribe",
-  "trace",
-  "unlock",
-  "unsubscribe",
-];
+function flatMiddleware(middlewares) {
+  const result = Object.create(null);
+
+  if (!middldeware) {
+    return result;
+  }
+
+  if (typeof middlewares !== "object" || Array.isArray(middlewares)) {
+    middlewares = {
+      all: toArray(middlewares),
+    };
+  }
+
+  METHODS.forEach((method) => {
+    if (method in middlewares) {
+      result[method.toUpperCase()] = toArray(middlewares[method]).map(
+        (middleware) =>
+          fakeMiddleware(method.toUpperCase(), loadMiddleware(middleware))
+      );
+    }
+  });
+
+  return result;
+}
+
+function fakeMiddleware(method, callback) {
+  if (method?.toLowerCase() === "all") {
+    return callback;
+  }
+  return (req, res, next) => {
+    if (req.method?.toLowerCase() === method?.toLowerCase()) {
+      callback(req, res, next);
+    } else {
+      next();
+    }
+  };
+}
+
+function createVirualRouter(module) {
+  const middlewares = flatMiddleware(module.middleware);
+  const virualRouter = Router();
+
+  /// if module export Router
+  if (module?.constructor === Router) {
+    METHODS.forEach((method) => {
+      method = method.toUpperCase();
+      if (method in middlewares) {
+        virualRouter.use(...middlewares[method]);
+      }
+    });
+
+    virualRouter.use(module);
+  } else {
+    /// use middleware all
+    if ("ALL" in middlewares) {
+      virualRouter.use(...middlewares.ALL);
+    }
+    const routeRootFromVirual = virualRouter.route("/");
+
+    METHODS.forEach((method) => {
+      method = method.toUpperCase();
+
+      const methodFunction = module[method] || module[method.toLowerCase()];
+
+      if (methodFunction) {
+        if (
+          typeof methodFunction === "function" ||
+          Array.isArray(methodFunction)
+        ) {
+          routeRootFromVirual[method.toLowerCase()](
+            ...(method in middlewares ? middlewares[method] : []),
+            ...toArray(methodFunction)
+          );
+        } else {
+          console.error(
+            chalk.red(
+              message(
+                `router "${module.pathJoined} exported "${method}" unknown type.`
+              )
+            )
+          );
+        }
+      }
+    });
+  }
+
+  return virualRouter;
+}
+
 /**
  * @param  {string="./routes"} path
  * @return {Router}
  */
-function loadRoutes(url = "./routes") {
+module.exports = function loadRoutes(url = "./routes") {
   const routes = readerRoutes(url);
 
   const router = Router();
@@ -159,53 +252,23 @@ function loadRoutes(url = "./routes") {
     if (error === true) {
       console.error(message);
     } else {
-      const middleware = toArray(module.middleware).map((middle) =>
-        loadMiddleware(middle)
-      );
-
-      if (module?.constructor === Router) {
-        if (middleware.length > 0) {
-          const cloneRouter = Router();
-
-          middleware.forEach((middle) => {
-            cloneRouter.use(middle);
-          });
-          cloneRouter.use(module);
-
-          router.use(name, cloneRouter);
-        } else {
-          router.use(name, module);
-        }
-      } else {
-        const route = router.route(name);
-
-        METHODS.forEach((method) => {
-          if (module[method]) {
-            if (Array.isArray(module[method])) {
-              route[method](
-                ...middleware,
-                ...module[method].map((middle) => loadMiddleware(middle))
-              );
-            } else {
-              route[method](...middleware, module[method]);
-            }
-          }
-        });
-      }
+      const virualRouter = createVirualRouter(module);
+      router.use(name, virualRouter);
     }
   });
 
   return router;
-}
-
-module.exports = loadRoutes;
+};
 
 /**
  * @param  {string|object|symbol} name
  * @param  {(request: Request, response: Response, next?: NextFunction) => void} middleware
  * @return {void}
  */
-module.exports.registerMiddleware = function registerMiddleware(name, middleware) {
+module.exports.registerMiddleware = function registerMiddleware(
+  name,
+  middleware
+) {
   if (middlewareInstalled.has(name)) {
     console.warn(chalk.yellow(message(`"${name}" middleware already exists.`)));
   }
@@ -227,23 +290,17 @@ module.exports.registerMiddleware = function registerMiddleware(name, middleware
  * @return {Router}
  */
 module.exports.registerRoute = function registerRoute(path, route) {
-  const routeExpress = Router();
-
   if (path?.constructor === Router) {
-    routeExpress.use(path);
-  }
-  if (route?.constructor === Router) {
-    routeExpress.use(route);
-  }
-  if (typeof route === "function") {
-    routeExpress.route(path).all(route);
+    const router = Router();
+
+    router.use(path);
+
+    return router;
   }
 
-  METHODS.forEach((method) => {
-    if (method in route) {
-      routeExpress.route(path)[method](route[method]);
-    }
-  });
+  const router = Router();
 
-  return routeExpress;
+  router.use(path, createVirualRouter(route));
 };
+
+module.exports.METHODS = METHODS;
