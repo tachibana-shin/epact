@@ -188,3 +188,19 @@ app.listen(8080, err => {
   }
 })
 ```
+
+## Typescript
+
+``` ts
+import { exposeRouter } from "express-import-routes"
+
+export default exposeRouter({
+  middleware: {
+    post: upload.single('avatar'),
+  },
+  post (req, res) {
+    // req.file is the `avatar` file
+    // req.body will hold the text fields, if there were any
+  }
+})
+```
