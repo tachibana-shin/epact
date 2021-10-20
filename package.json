@@ -2,7 +2,7 @@
   "name": "express-import-routes",
   "description": "Auto import your routes like Nuxt.js",
   "author": "Nguyen Thanh",
-  "version": "0.0.3",
+  "version": "0.0.4-b1",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
