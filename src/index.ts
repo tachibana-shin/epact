@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 
+import { rootPath } from "app-root-path";
 import chalk from "chalk";
 import { Router } from "express";
 import type { RequestHandler } from "express";
@@ -37,6 +38,14 @@ const METHODS = [
   "unlock",
   "unsubscribe",
 ];
+
+// eslint-disable-next-line functional/no-let
+export let PATH_SRC_ROOT = path.join(rootPath);
+// eslint-disable-next-line functional/no-return-void
+export function setSrcRoot(path: string): void {
+  PATH_SRC_ROOT = path;
+}
+
 type TypeMethods =
   | "all"
   | "checkout"
@@ -127,7 +136,7 @@ function loadMiddleware(
   }
 
   const { module, error, message, pathJoined } = requireModule(
-    path.join("middleware", pathOrNameOrMiddle)
+    path.join(PATH_SRC_ROOT, "middleware", pathOrNameOrMiddle)
   );
 
   if (error === true) {
@@ -248,7 +257,9 @@ function createVirtualRouter(
   return virtualRouter;
 }
 
-export default function loadRoutes(url = "./routes"): Router {
+export default function loadRoutes(
+  url = path.join(PATH_SRC_ROOT, "routes")
+): Router {
   const routes = readerRoutes(url);
 
   const router = Router();
