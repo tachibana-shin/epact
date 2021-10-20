@@ -1,6 +1,6 @@
 import { join } from "path";
 
-import { rootPath } from "app-root-path";
+import { path as rootPath } from "app-root-path";
 
 export type RequireModuleResult = {
   readonly error: boolean;

@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import { rootPath } from "app-root-path";
+import { path as rootPath } from "app-root-path";
 import chalk from "chalk";
 import { Router } from "express";
 import type { RequestHandler } from "express";
@@ -40,7 +40,7 @@ const METHODS = [
 ];
 
 // eslint-disable-next-line functional/no-let
-export let PATH_SRC_ROOT = path.join(rootPath);
+export let PATH_SRC_ROOT = rootPath || "";
 // eslint-disable-next-line functional/no-return-void
 export function setSrcRoot(path: string): void {
   PATH_SRC_ROOT = path;
