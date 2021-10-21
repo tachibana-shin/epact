@@ -1,7 +1,3 @@
-import { join } from "path";
-
-import { path as rootPath } from "app-root-path";
-
 export type RequireModuleResult = {
   readonly error: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,9 +9,7 @@ export type RequireModuleResult = {
   readonly pathJoined: string;
 };
 
-export function requireModule(id: string): RequireModuleResult {
-  const pathJoined = join(rootPath, id);
-
+export function requireModule(pathJoined: string): RequireModuleResult {
   try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const module = require(pathJoined);
