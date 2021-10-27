@@ -6,6 +6,7 @@ import { Router } from "express";
 import type { RequestHandler } from "express";
 
 import { error, warn } from "../helpers/log";
+import rootConfigs from "../helpers/root-configs";
 import { mergeArray, toArray } from "../utils/array-helper";
 import { parseIdRouter } from "../utils/parseIdRouter";
 import { requireModule } from "../utils/requireModule";
@@ -237,8 +238,8 @@ function createVirtualRouter(
   return virtualRouter;
 }
 
-export function useRouter(url = "src/routes"): Router {
-  url = path.resolve(appRoot, url);
+export function useRouter(): Router {
+  const url = path.resolve(appRoot, "src/routes");
 
   const routes = readerRoutes(url);
 
@@ -254,6 +255,8 @@ export function useRouter(url = "src/routes"): Router {
       }
     }
   );
+
+  rootConfigs.router?.extendRoutes(router);
 
   return router;
 }
