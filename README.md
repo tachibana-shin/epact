@@ -1,27 +1,17 @@
-# express-import-routes
-
-This plugin will remove the way you think about importing routers for expressjs
-
-## 0.0.2-b5 What news?
-- Better support middleware access.
-- Using the [app-root-path](https://www.npmjs.com/package/app-root-path) package ensures the transparency of the paths.
-- Add a custom router and middleware registry.
-
-[View example](./example)
+# express-fw
 
 ## Usage
-
+``` bash
+yarn add express-fw
 ```
-yarn add express-import-routes
-```
 
-``` js
-const express = require("express")
-const importRoutes = require("express-import-routes")
+``` ts
+import express from "express"
+import fw from "express-fw"
 
 const app = express()
 
-app.use(importRoutes())
+app.use(fw())
 
 app.listen(8080, err => {
   if ( err ) {
@@ -31,6 +21,33 @@ app.listen(8080, err => {
   }
 })
 ```
+
+### Boot
+
+Usage `express-fw.config.json`
+
+``` json
+{
+  "boot": ["my-boot"]
+}
+```
+
+and create file boot in `src/<name boot>`
+
+`src/my-boot.ts`:
+
+``` ts
+import { boot } from "express-fw"
+
+export default boot(() => {
+  return (err, req, res, next) => {
+    console.log("listened request on " + req.url)
+    next()
+  }
+})
+```
+
+### Router & Middleware
 
 And now in the routes directory let's create your routes. express-import-routes will import all of them for you
 
@@ -69,7 +86,7 @@ app.listen(8080, err => {
 
 The file naming rules for configuring routers are the same as nuxtjs. Please refer here [Nuxt router system](https://nuxtjs.org/docs/2.x/features/file-system-routing)
 
-## Route file writing rules
+### Route file writing rules
 
 The route file in /routes requires you to export some function to render the route
 
@@ -103,9 +120,9 @@ exports.post = [upload.single('avatar'), function (req, res) {
 }]
 ```
 
-## Middleware
+### Middleware
 
-### Add stronger support with middleware.
+#### Add stronger support with middleware.
 
 You can now export the middleware to tell the plugin that you want it to apply the middleware to this route.
 
@@ -134,7 +151,7 @@ module.exports = (req, res, next) => {
 }
 ```
 
-### Specify local middleware
+#### Specify local middleware
 
 You can now specify each middleware for each router.
 
@@ -161,7 +178,7 @@ exports.post = function (req, res) {
 ```
 
 
-## Register 
+### Register 
 
 I added 2 methods for you to register the plugin to know this is a custom method. it can also combine with other modules like multer.
 
@@ -189,7 +206,7 @@ app.listen(8080, err => {
 })
 ```
 
-## Typescript
+### Typescript
 
 ``` ts
 import { exposeRouter } from "express-import-routes"

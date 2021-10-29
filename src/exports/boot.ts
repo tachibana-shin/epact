@@ -25,7 +25,7 @@ export function useBoot(): Router {
           error(message);
         } else {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          router.use((module as any)?.());
+          router.use((module as any)?.({ router }));
         }
       }
     } catch (err) {
@@ -38,6 +38,8 @@ export function useBoot(): Router {
   return router;
 }
 
-export function boot(cb: () => RequestHandler | void) {
+export function boot(
+  cb: (app: { readonly router: Router }) => RequestHandler | void
+) {
   return cb;
 }
