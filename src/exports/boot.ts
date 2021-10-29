@@ -2,16 +2,16 @@ import fs from "fs";
 import path from "path";
 
 import appRoot from "app-root-path";
-import { RequestHandler, Router } from "express";
+import { Express, RequestHandler, Router } from "express";
 
 import { error, warn } from "../helpers/log";
 import rootConfigs from "../helpers/root-configs";
 import { requireModule } from "../utils/requireModule";
 
-export function useBoot(): Router {
+export function useBoot(app?: Express): Router {
   const url = path.resolve(appRoot, "src/boot");
 
-  const router = Router();
+  const router = app || Router();
 
   rootConfigs.boot?.forEach((child) => {
     const pathJoined = path.join(url, child);

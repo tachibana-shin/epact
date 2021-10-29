@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 import appRoot from "app-root-path";
-import { Router } from "express";
+import { Express, Router } from "express";
 import type { RequestHandler } from "express";
 
 import { error, warn } from "../helpers/log";
@@ -238,12 +238,12 @@ function createVirtualRouter(
   return virtualRouter;
 }
 
-export function useRouter(): Router {
+export function useRouter(app?: Express): Router {
   const url = path.resolve(appRoot, "src/routes");
 
   const routes = readerRoutes(url);
 
-  const router = Router();
+  const router = app || Router();
 
   routes.forEach(
     ({ name, module: { pathJoined, error: err, message, module } }) => {
