@@ -6,12 +6,9 @@ yarn add express-fw
 ```
 
 ``` ts
-import express from "express"
-import fw from "express-fw"
+import { createApp } from "express-fw"
 
-const app = express()
-
-app.use(fw())
+const app = createApp()
 
 app.listen(8080, err => {
   if ( err ) {
