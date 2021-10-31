@@ -2,7 +2,7 @@
   "name": "express-fw",
   "description": "A simple wrapper for expressa simple wrapper for express",
   "author": "Nguyen Thanh",
-  "version": "0.0.1",
+  "version": "0.0.2-b1",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",

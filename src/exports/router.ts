@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import appRoot from "app-root-path";
+import { resolve as resolveRoot, path as appRoot } from "app-root-path";
 import { Express, Router } from "express";
 import type { RequestHandler } from "express";
 
@@ -239,7 +239,7 @@ function createVirtualRouter(
 }
 
 export function useRouter(app?: Express): Router {
-  const url = path.resolve(appRoot, "src/routes");
+  const url = resolveRoot("src/routes");
 
   const routes = readerRoutes(url);
 
