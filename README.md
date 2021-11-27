@@ -8,15 +8,7 @@ yarn add express-fw
 ``` ts
 import { createApp } from "express-fw"
 
-const app = createApp()
-
-app.listen(8080, err => {
-  if ( err ) {
-    console.error(err)
-  } else {
-    console.log("App it runing on port 8080.")
-  }
-})
+export default createApp()
 ```
 
 ### Boot
