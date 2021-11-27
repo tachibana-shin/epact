@@ -287,7 +287,13 @@ function router(opts: {
         string | RequestHandler | ReadonlyArray<string | RequestHandler>,
         RequestHandler
       ];
-}) {
+} | RequestHandler) {
+  if (typeof opts === "function") {
+    return {
+      get: opts,
+    }
+  }
+  
   return opts;
 }
 

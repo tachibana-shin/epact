@@ -22,7 +22,13 @@ function useBoot(app: Express, appRoot: string): Router {
           error(message);
         } else {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          app.use((module as any)?.({ router: app }));
+          const plgs = (module as any)?.({ router: app });
+          
+          if (Array.isArray(plgs)) {
+            plgs.forEach(plg => void app.use(plg));
+          } else {
+            app.use(plgs);
+          }
         }
       }
     } catch (err) {
@@ -35,7 +41,7 @@ function useBoot(app: Express, appRoot: string): Router {
   return app;
 }
 
-function boot(cb: (app: { readonly router: Router }) => RequestHandler | void) {
+function boot(cb: (app: { readonly router: Router }) => RequestHandler | readonly RequestHandler[] | void) {
   return cb;
 }
 
