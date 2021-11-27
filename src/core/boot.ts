@@ -1,18 +1,14 @@
 import fs from "fs";
-
 import { join } from "path";
 
-import { resolve as resolveRoot } from "app-root-path";
 import { Express, RequestHandler, Router } from "express";
 
 import { error, warn } from "../helpers/log";
 import rootConfigs from "../helpers/root-configs";
 import { requireModule } from "../utils/requireModule";
 
-export function useBoot(app?: Express): Router {
-  const url = resolveRoot("src/boot");
-
-  const router = app || Router();
+function useBoot(app: Express, appRoot: string): Router {
+  const url = join(appRoot, "boot");
 
   rootConfigs.boot?.forEach((child) => {
     const pathJoined = join(url, child);
@@ -26,7 +22,7 @@ export function useBoot(app?: Express): Router {
           error(message);
         } else {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          router.use((module as any)?.({ router }));
+          app.use((module as any)?.({ router: app }));
         }
       }
     } catch (err) {
@@ -36,11 +32,11 @@ export function useBoot(app?: Express): Router {
     }
   });
 
-  return router;
+  return app;
 }
 
-export function boot(
-  cb: (app: { readonly router: Router }) => RequestHandler | void
-) {
+function boot(cb: (app: { readonly router: Router }) => RequestHandler | void) {
   return cb;
 }
+
+export { useBoot, boot };

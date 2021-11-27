@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
 
-import { resolve as resolveRoot, path as appRoot } from "app-root-path";
 import { Express, Router } from "express";
 import type { RequestHandler } from "express";
 
@@ -111,7 +110,8 @@ function readerRoutes(uri: string): readonly {
 }
 
 function loadMiddleware(
-  pathOrNameOrMiddle: string | RequestHandler
+  pathOrNameOrMiddle: string | RequestHandler,
+  appRoot: string
 ): RequestHandler {
   if (middlewareInstalled.has(pathOrNameOrMiddle)) {
     return middlewareInstalled.get(pathOrNameOrMiddle);
@@ -140,7 +140,8 @@ function loadMiddleware(
 
 function flatMiddleware(
   // eslint-disable-next-line @typescript-eslint/ban-types
-  middleware: null | readonly string[] | object
+  middleware: null | readonly string[] | object,
+  appRoot: string
   // eslint-disable-next-line @typescript-eslint/ban-types
 ): object {
   const result = Object.create(null);
@@ -163,7 +164,10 @@ function flatMiddleware(
         result[method.toUpperCase()],
         [...toArray(middleware[method]), ...toArray(middleware[nameUpper])].map(
           (middleware) =>
-            fakeMiddleware(method.toUpperCase(), loadMiddleware(middleware))
+            fakeMiddleware(
+              method.toUpperCase(),
+              loadMiddleware(middleware, appRoot)
+            )
         )
       );
     }
@@ -190,9 +194,10 @@ function fakeMiddleware(
 
 function createVirtualRouter(
   module: RequireModuleResult["module"],
-  pathJoined = "<anonymous>"
+  pathJoined = "<anonymous>",
+  appRoot: string
 ): Router {
-  const middleware = flatMiddleware(module.middleware);
+  const middleware = flatMiddleware(module.middleware, appRoot);
   const virtualRouter = Router();
   const routeRootFromVirtual = virtualRouter.route("/");
 
@@ -238,30 +243,28 @@ function createVirtualRouter(
   return virtualRouter;
 }
 
-export function useRouter(app?: Express): Router {
-  const url = resolveRoot("src/routes");
+function useRouter(app: Express, appRoot: string): Router {
+  const url = path.join(appRoot, "routes");
 
   const routes = readerRoutes(url);
-
-  const router = app || Router();
 
   routes.forEach(
     ({ name, module: { pathJoined, error: err, message, module } }) => {
       if (err === true) {
         error(message);
       } else {
-        const virualRouter = createVirtualRouter(module, pathJoined);
-        router.use(name, virualRouter);
+        const virualRouter = createVirtualRouter(module, pathJoined, appRoot);
+        app.use(name, virualRouter);
       }
     }
   );
 
-  rootConfigs.router?.extendRoutes(router);
+  rootConfigs.router?.extendRoutes(app);
 
-  return router;
+  return app;
 }
 
-export function registerMiddleware(
+function registerMiddleware(
   name: string,
   middleware: RequestHandler
   // eslint-disable-next-line functional/no-return-void
@@ -277,23 +280,7 @@ export function registerMiddleware(
   middlewareInstalled.set(name, middleware);
 }
 
-export function registerRoute(
-  path: string,
-  route: RequestHandler | Router
-  // eslint-disable-next-line functional/no-return-void
-): void {
-  if (path?.constructor === Router) {
-    const router = Router();
-
-    router.use(path);
-  }
-
-  const router = Router();
-
-  router.use(path, createVirtualRouter(route));
-}
-
-export function exportRouter(opts: {
+function router(opts: {
   readonly [name in TypeMethods | "middleware"]?:
     | RequestHandler
     | readonly [
@@ -303,3 +290,5 @@ export function exportRouter(opts: {
 }) {
   return opts;
 }
+
+export { useRouter, registerMiddleware, router };
