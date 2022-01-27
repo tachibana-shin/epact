@@ -193,13 +193,14 @@ function fakeMiddleware(
 }
 
 function createVirtualRouter(
+  name: string,
   module: RequireModuleResult["module"],
   pathJoined = "<anonymous>",
   appRoot: string
 ): Router {
   const middleware = flatMiddleware(module.middleware, appRoot);
   const virtualRouter = Router();
-  const routeRootFromVirtual = virtualRouter.route("/");
+  const routeRootFromVirtual = virtualRouter.route(name);
 
   /// if module export Router
   if (module?.constructor === Router) {
@@ -253,8 +254,8 @@ function useRouter(app: Express, appRoot: string): Router {
       if (err === true) {
         error(message);
       } else {
-        const virualRouter = createVirtualRouter(module, pathJoined, appRoot);
-        app.use(name, virualRouter);
+        const virualRouter = createVirtualRouter(name, module, pathJoined, appRoot);
+        app.use(virualRouter);
       }
     }
   );
