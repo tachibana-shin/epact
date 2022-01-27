@@ -1,4 +1,3 @@
-import fs from "fs";
 import { join } from "path";
 
 import { Express, RequestHandler, Router } from "express";
