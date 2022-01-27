@@ -14,7 +14,6 @@ function useBoot(app: Express, appRoot: string): Router {
     const pathJoined = join(url, child);
 
     try {
-      if (fs.lstatSync(pathJoined).isFile()) {
         // load
         const { error: err, message, module } = requireModule(pathJoined);
 
@@ -30,7 +29,6 @@ function useBoot(app: Express, appRoot: string): Router {
             app.use(plgs);
           }
         }
-      }
     } catch (err) {
       if (err.code === "ENOENT") {
         warn(`Can't find boot "${child}"`);
