@@ -20,7 +20,7 @@ function useBoot(app: Express, appRoot: string): Router {
           error(message);
         } else {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const plgs = (module as any)?.({ router: app });
+          const plgs = module?.lenth >= 2 ? module : (module as any)?.({ router: app });
           
           if (Array.isArray(plgs)) {
             plgs.forEach(plg => void app.use(plg));
