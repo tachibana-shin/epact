@@ -7,7 +7,8 @@ import rootConfigs from "../helpers/root-configs";
 // eslint-disable-next-line functional/no-let
 let app: Express;
 export function createApp(port = rootConfigs.port || "3000"): Express {
-  const appRoot = require.main.path//
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const appRoot = require.main!.path//
 
   if (!app) {
     app = express();

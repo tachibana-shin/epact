@@ -41,7 +41,8 @@ export function useBoot(app: Express, appRoot: string): Router {
       } else {
         app.use(plugins);
       }
-    } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       if (err.code === "ENOENT") {
         warn(`Can't find boot "${bootName}"`);
       }

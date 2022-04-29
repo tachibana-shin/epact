@@ -1,4 +1,4 @@
-import { basename, normalize } from "path";
+import { normalize } from "path";
 
 const rEXT = /(?:\.[^.]+|\/)$/g;
 const rParams = /_([a-zA-Z0-9_-]{1,})/g;
