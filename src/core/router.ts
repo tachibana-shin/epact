@@ -1,18 +1,19 @@
-import fs from "fs";
-import path from "path";
+import path, { dirname, relative } from "path";
 
-import { Express, Router } from "express";
-import type { RequestHandler } from "express";
+import { ErrorRequestHandler, Express, RequestHandler, Router } from "express";
+import { globbySync } from "globby";
 
 import { error, warn } from "../helpers/log";
 import rootConfigs from "../helpers/root-configs";
-import { mergeArray, toArray } from "../utils/array-helper";
-import { parseIdRouter } from "../utils/parseIdRouter";
-import { requireModule } from "../utils/requireModule";
-import type { RequireModuleResult } from "../utils/requireModule";
+import TypesForRequestHandlerParams, {
+  RequestHandlerFlatParams,
+} from "../type/TypesForRequestHandlerParams";
+import alwayIsArray from "../utils/alwayIsArray";
+import loadModule from "../utils/loadModule";
+import parsePrefixRouter from "../utils/parsePrefixRouter";
 
-const middlewareInstalled = new Map();
-const METHODS = [
+const middlewareGlobalStore = new Map();
+const ALL_METHODS = [
   "all",
   "checkout",
   "copy",
@@ -38,8 +39,7 @@ const METHODS = [
   "unlock",
   "unsubscribe",
 ];
-
-type TypeMethods =
+type Methods =
   | "all"
   | "checkout"
   | "copy"
@@ -65,212 +65,185 @@ type TypeMethods =
   | "unlock"
   | "unsubscribe";
 
-function readerRoutes(uri: string): readonly {
-  readonly name: string;
-  readonly module: RequireModuleResult;
-}[] {
-  return (
-    fs
-      .readdirSync(uri)
-      .map((child) => {
-        const pathJoined = path.join(uri, child);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AllOfArray<T> = T extends readonly any[] ? T : readonly T[];
+type Middleware = AllOfArray<string | RequestHandler | ErrorRequestHandler>;
 
-        if (fs.lstatSync(pathJoined).isDirectory()) {
-          const children = readerRoutes(pathJoined);
-          const id = parseIdRouter(child);
+function loadAllRoutes(srcToRoutes: string) {
+  const files = globbySync(path.join(srcToRoutes, "**.{ts,js}"));
 
-          const name = id === "/" ? "/index" : `${id}`;
+  return files
+    .map((file) => {
+      const prefix = parsePrefixRouter(relative(srcToRoutes, file));
+      const { error: err, exported } = loadModule<
+        {
+          // eslint-disable-next-line functional/prefer-readonly-type
+          middleware: Middleware;
+        },
+        Record<string, unknown> | Router
+      >(file);
 
-          return children.map(({ module, name: nameChildren }) => {
-            return {
-              module,
-              name: nameChildren === "/" ? `${name}` : `${name}${nameChildren}`,
-            };
+      if (err) {
+        error(err);
+        return void 0;
+      }
+      const dir = dirname(srcToRoutes);
+
+      const middleware =
+        "middleware" in exported
+          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            loadMiddleware(dir, (exported as any).middleware)
+          : null;
+
+      if (exported.default instanceof Router) {
+        // cracker;
+        (exported.default as Router).use(...middleware.all);
+        const virualRouter = Router();
+        // eslint-disable-next-line functional/no-loop-statement
+        for (const method in middleware) {
+          if (method === "all") continue;
+          middleware[method].forEach((middy) => {
+            if (middy.length === 4) {
+              virualRouter.use((error, req, res, next) => {
+                if (req.method !== method) {
+                  next();
+                  return;
+                }
+
+                middy(error, req, res, next);
+              });
+              return;
+            }
+
+            virualRouter.use((req, res, next) => {
+              if (req.method !== method) {
+                next();
+                return;
+              }
+
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (middy as any)(req, res, next);
+            });
           });
-        } else {
-          const id = parseIdRouter(child);
-
-          // eslint-disable-next-line functional/no-let
-          let name = "";
-          if (id.includes(":")) {
-            name = `${id}?`;
-          } else {
-            name = `${id}`;
-          }
-
-          return {
-            name,
-            module: requireModule(pathJoined),
-          };
         }
-      })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .flat(1) as any
-  );
-}
+        virualRouter.use(exported.default as Router);
 
+        return {
+          prefix,
+          router: virualRouter,
+        };
+      }
+
+      const router = Router();
+      const route = router.route("/");
+      // eslint-disable-next-line functional/no-loop-statement
+      for (const method in exported.default) {
+        if (method === "middleware") continue;
+
+        route[method](
+          ...(middleware?.[method] || []),
+          ...alwayIsArray(exported.default[method] ?? [])
+            .map((item: Middleware) => {
+              if (typeof item === "string") {
+                return loadMiddleware(dir, item);
+              }
+
+              return item;
+            })
+            .flat(1)
+        );
+      }
+
+      return {
+        prefix,
+        router,
+      };
+    })
+    .filter(Boolean);
+}
 function loadMiddleware(
-  pathOrNameOrMiddle: string | RequestHandler,
-  appRoot: string
-): RequestHandler {
-  if (middlewareInstalled.has(pathOrNameOrMiddle)) {
-    return middlewareInstalled.get(pathOrNameOrMiddle);
+  srcRoot: string,
+  list?: Middleware | Record<typeof ALL_METHODS[number] | "*", Middleware>
+) {
+  if (!list) {
+    return null;
   }
-
-  if (typeof pathOrNameOrMiddle === "function") {
-    return pathOrNameOrMiddle;
-  }
-
-  const {
-    module,
-    error: err,
-    message,
-    pathJoined,
-  } = requireModule(
-    path.resolve(path.join(appRoot, "middleware"), pathOrNameOrMiddle)
-  );
-
-  if (err === true) {
-    error(`Middleware "${pathOrNameOrMiddle}" from "${pathJoined}" error:`);
-    error(message);
-  }
-
-  return module as RequestHandler;
-}
-
-function flatMiddleware(
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  middleware: null | readonly string[] | object,
-  appRoot: string
-  // eslint-disable-next-line @typescript-eslint/ban-types
-): object {
-  const result = Object.create(null);
-
-  if (!middleware) {
-    return result;
-  }
-
-  if (typeof middleware !== "object" || Array.isArray(middleware)) {
-    middleware = {
-      all: toArray(middleware),
+  if (
+    typeof list === "string" ||
+    typeof list === "function" ||
+    Array.isArray(list)
+  ) {
+    list = {
+      all: list,
     };
   }
 
-  METHODS.forEach((method) => {
-    const nameUpper = method.toUpperCase();
-    if (method in middleware || nameUpper in middleware) {
-      // eslint-disable-next-line functional/immutable-data
-      result[method.toUpperCase()] = mergeArray(
-        result[method.toUpperCase()],
-        [...toArray(middleware[method]), ...toArray(middleware[nameUpper])].map(
-          (middleware) =>
-            fakeMiddleware(
-              method.toUpperCase(),
-              loadMiddleware(middleware, appRoot)
-            )
-        )
+  // eslint-disable-next-line functional/no-loop-statement
+  for (const method in list) {
+    // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
+    list[method] = loadArrayMiddleware(srcRoot, list[method]) as any;
+  }
+
+  // eslint-disable-next-line functional/prefer-readonly-type
+  return list as Record<string, (RequestHandler | ErrorRequestHandler)[]>;
+}
+function loadArrayMiddleware(
+  srcRoot: string,
+  list: Middleware
+  // eslint-disable-next-line functional/prefer-readonly-type
+): (RequestHandler | ErrorRequestHandler)[] {
+  return alwayIsArray(list)
+    .map((handler) => {
+      if (typeof handler === "function") {
+        return handler;
+      }
+
+      if (middlewareGlobalStore.has(handler)) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return middlewareGlobalStore.get(handler)!;
+      }
+
+      const srcToMiddle = path.join(
+        srcRoot,
+        "middleware",
+        handler as unknown as string
       );
-    }
-  });
+      const {
+        error: err,
+        exported: { default: exported },
+      } = loadModule(srcToMiddle);
 
-  return result;
-}
-
-function fakeMiddleware(
-  method: string,
-  callback: RequestHandler
-): RequestHandler {
-  if (method?.toLowerCase() === "all") {
-    return callback;
-  }
-  return (req, res, next) => {
-    if (req.method?.toLowerCase() === method?.toLowerCase()) {
-      callback(req, res, next);
-    } else {
-      next();
-    }
-  };
-}
-
-function createVirtualRouter(
-  name: string,
-  module: RequireModuleResult["module"],
-  pathJoined = "<anonymous>",
-  appRoot: string
-): Router {
-  const middleware = flatMiddleware(module.middleware, appRoot);
-  const virtualRouter = Router();
-  const routeRootFromVirtual = virtualRouter.route(name);
-
-  /// if module export Router
-  if (module?.constructor === Router) {
-    METHODS.forEach((method) => {
-      method = method.toUpperCase();
-      if (method in middleware) {
-        routeRootFromVirtual[method.toLowerCase()](...middleware[method]);
+      if (err) {
+        error(`Middleware "${handler}" from "${srcToMiddle}" error:`);
+        error(err);
+        return 0x0;
       }
-    });
 
-    virtualRouter.use(module as typeof Router);
-  } else {
-    /// use middleware all
-    // if ("ALL" in middleware) {
-    //   virtualRouter.use("/", ...middleware.ALL);
-    // }
-
-    METHODS.forEach((method) => {
-      method = method.toUpperCase();
-
-      const methodFunction = module[method] || module[method.toLowerCase()];
-
-      if (methodFunction) {
-        if (
-          typeof methodFunction === "function" ||
-          Array.isArray(methodFunction)
-        ) {
-          routeRootFromVirtual[method.toLowerCase()](
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ...((middleware as any).ALL || (middleware as any).All || []),
-            ...(method in middleware ? middleware[method] : []),
-            ...toArray(methodFunction)
-          );
-        } else {
-          error(`router "${pathJoined} exported "${method}" unknown type.`);
-        }
-      }
-    });
-  }
-
-  return virtualRouter;
+      return exported;
+    })
+    .filter(Boolean);
 }
 
-function useRouter(app: Express, appRoot: string): Router {
+export function useRouter(app: Express, appRoot: string): Router {
   const url = path.join(appRoot, "routes");
 
-  const routes = readerRoutes(url);
+  const routes = loadAllRoutes(url);
 
-  routes.forEach(
-    ({ name, module: { pathJoined, error: err, message, module } }) => {
-      if (err === true) {
-        error(message);
-      } else {
-        const virualRouter = createVirtualRouter(name, module, pathJoined, appRoot);
-        app.use(virualRouter);
-      }
-    }
-  );
+  routes.forEach(({ prefix, router }) => {
+    app.use(prefix, router);
+  });
 
   rootConfigs.router?.extendRoutes(app);
 
   return app;
 }
 
-function registerMiddleware(
+export function installMiddleware(
   name: string,
   middleware: RequestHandler
   // eslint-disable-next-line functional/no-return-void
 ): void {
-  if (middlewareInstalled.has(name)) {
+  if (middlewareGlobalStore.has(name)) {
     warn(`"${name}" middleware already exists.`);
   }
 
@@ -278,24 +251,42 @@ function registerMiddleware(
     error(`(process install ${name}) a middleware must be a function.`);
   }
 
-  middlewareInstalled.set(name, middleware);
+  middlewareGlobalStore.set(name, middleware);
 }
 
-function router(opts: {
-  readonly [name in TypeMethods | "middleware"]?:
-    | RequestHandler
-    | readonly [
-        string | RequestHandler | ReadonlyArray<string | RequestHandler>,
-        RequestHandler
-      ];
-} | RequestHandler) {
+export function router<
+  Params extends Partial<
+    Record<
+      Methods,
+      Partial<Record<keyof TypesForRequestHandlerParams, unknown>>
+    >
+  >
+>(
+  opts: // eslint-disable-next-line functional/prefer-readonly-type
+  | ({
+        [name in Methods]?:
+          | RequestHandlerFlatParams<Params[name]>
+          | string
+          // eslint-disable-next-line functional/prefer-readonly-type
+          | string[]
+          // eslint-disable-next-line functional/prefer-readonly-type
+          | (string | RequestHandlerFlatParams<Params[name]>)[];
+      } & {
+        // eslint-disable-next-line functional/prefer-readonly-type
+        middleware?:
+          | RequestHandler
+          | string
+          | string
+          // eslint-disable-next-line functional/prefer-readonly-type
+          | (string | RequestHandler)[];
+      })
+    | RequestHandlerFlatParams<Params["get"]>
+) {
   if (typeof opts === "function") {
     return {
       get: opts,
-    }
+    };
   }
-  
+
   return opts;
 }
-
-export { useRouter, registerMiddleware, router };

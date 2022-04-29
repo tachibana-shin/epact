@@ -1,36 +1,49 @@
 import { join } from "path";
 
-import { Express, RequestHandler, Router } from "express";
+import { Express, Router } from "express";
 
 import { error, warn } from "../helpers/log";
 import rootConfigs from "../helpers/root-configs";
-import { requireModule } from "../utils/requireModule";
+import TypesForRequestHandlerParams, {
+  RequestHandlerFlatParams,
+} from "../type/TypesForRequestHandlerParams";
+import loadModule from "../utils/loadModule";
 
-function useBoot(app: Express, appRoot: string): Router {
+export function useBoot(app: Express, appRoot: string): Router {
   const url = join(appRoot, "boot");
 
-  rootConfigs.boot?.forEach((child) => {
-    const pathJoined = join(url, child);
+  rootConfigs.boot?.forEach((bootName) => {
+    const pathJoined = join(url, bootName);
 
     try {
-        // load
-        const { error: err, message, module } = requireModule(pathJoined);
+      // load
+      const {
+        error: err,
+        exported: { default: exported },
+      } = loadModule(pathJoined);
 
-        if (err) {
-          error(message);
-        } else {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const plgs = module?.lenth >= 2 ? module : (module as any)?.({ router: app });
-          
-          if (Array.isArray(plgs)) {
-            plgs.forEach(plg => void app.use(plg));
-          } else {
-            app.use(plgs);
-          }
-        }
+      if (err) {
+        error(err);
+        return;
+      }
+
+      if (typeof exported !== "function") {
+        return; // no export
+      }
+
+      const plugins =
+        exported.length >= 3 ? exported : exported({ router: app });
+
+      if (Array.isArray(plugins)) {
+        plugins.forEach((plugin) => {
+          app.use(plugin);
+        });
+      } else {
+        app.use(plugins);
+      }
     } catch (err) {
       if (err.code === "ENOENT") {
-        warn(`Can't find boot "${child}"`);
+        warn(`Can't find boot "${bootName}"`);
       }
     }
   });
@@ -38,8 +51,15 @@ function useBoot(app: Express, appRoot: string): Router {
   return app;
 }
 
-function boot(cb: (app: { readonly router: Router }) => RequestHandler | readonly RequestHandler[] | void) {
-  return cb;
-}
+type BootCallback<
+  Params extends Partial<Record<keyof TypesForRequestHandlerParams, unknown>>
+> = (app: {
+  // eslint-disable-next-line functional/prefer-readonly-type
+  router: Router;
+}) => RequestHandlerFlatParams<Params>;
 
-export { useBoot, boot };
+export function boot<
+  Params extends Partial<Record<keyof TypesForRequestHandlerParams, unknown>>
+>(callback: BootCallback<Params>): BootCallback<Params> {
+  return callback;
+}
