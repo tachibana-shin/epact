@@ -153,7 +153,6 @@ function loadAllRoutes(srcToRoutes: string) {
                 if (typeof item === "string") {
                   return loadMiddleware(dir, item);
                 }
-console.log(item.length)
                 return item;
               })
               .flat(1)
