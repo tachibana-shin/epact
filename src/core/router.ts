@@ -70,7 +70,7 @@ type AllOfArray<T> = T extends readonly any[] ? T : readonly T[];
 type Middleware = AllOfArray<string | RequestHandler | ErrorRequestHandler>;
 
 function loadAllRoutes(srcToRoutes: string) {
-  const files = globbySync(path.join(srcToRoutes, "**.{ts,js}"));
+  const files = globbySync(path.join(srcToRoutes, "**/*.{ts,js}"));
 
   return (
     files
@@ -153,7 +153,7 @@ function loadAllRoutes(srcToRoutes: string) {
                 if (typeof item === "string") {
                   return loadMiddleware(dir, item);
                 }
-
+console.log(item.length)
                 return item;
               })
               .flat(1)
