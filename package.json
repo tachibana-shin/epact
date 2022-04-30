@@ -2,7 +2,7 @@
   "name": "express-fw",
   "description": "A simple wrapper for expressa simple wrapper for express",
   "author": "Nguyen Thanh",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "https://github.com/tachibana-shin/express-fw",
