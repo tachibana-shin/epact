@@ -2,11 +2,12 @@ import fs from "fs";
 import path from "path";
 
 import { path as rootPath } from "app-root-path";
+import alias from "module-alias";
 
 import defineConfig from "../core/defineConfig";
 
-// eslint-disable-next-line functional/no-let
-let configs = {};
+// eslint-disable-next-line functional/no-let, @typescript-eslint/no-explicit-any
+let configs = {} as any;
 
 function existsFileConfig(name: string): boolean {
   try {
@@ -28,5 +29,7 @@ if (existsFileConfig("express.config.json")) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   configs = require(path.join(rootPath, "express.config.ts")).default;
 }
+
+configs.alias?.(alias);
 
 export default configs as ReturnType<typeof defineConfig>;

@@ -9,7 +9,7 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
-    "build": "tsup-node ./src/index.ts --clean --format cjs --dts",
+    "build": "tsup-node ./src/index.ts --clean --format cjs --dts --splitting --target node16",
     "prepublishOnly": "pnpm build",
     "test": "jest"
   },

@@ -2,12 +2,14 @@
 import { join } from "path";
 
 import type { Express, Router } from "express";
-import alias from "module-alias";
+import type alias from "module-alias";
+type Alias = typeof alias;
 
 export type DefineConfig = {
   port?: number;
   boot?: string[];
-  alias?:
+  alias?: // eslint-disable-next-line functional/no-return-void
+  | ((aliases: Alias) => void)
     | Record<
         string,
         string | ((from: string, request: string, alias: string) => string)
@@ -40,40 +42,51 @@ export default function defineConfig(config: DefineConfig) {
   }
 
   const appRoot = require.main.path;
-
-  config.paths?.forEach((path) => {
-    alias.addPath(path);
-  });
-  if (Array.isArray(config.alias)) {
-    config.alias.forEach(({ find, replacement }) => {
-      if (typeof replacement === "function") {
-        alias.addAlias(find, ((from: string, request: string) => {
-          // eslint-disable-next-line @typescript-eslint/ban-types
-          return join(appRoot, (replacement as Function)(from, request));
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        }) as any);
-      } else {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        alias.addAlias(find, join(appRoot, replacement as any));
-      }
+  const { alias: aliases } = config;
+  function __bindAlias(alias: Alias) {
+    config.paths?.forEach((path) => {
+      alias.addPath(path);
     });
-  } else {
-    // eslint-disable-next-line functional/no-loop-statement
-    for (const find in config.alias) {
-      const replacement = config.alias[find];
 
-      if (typeof replacement === "function") {
-        alias.addAlias(find, ((from: string, request: string) => {
-          // eslint-disable-next-line @typescript-eslint/ban-types
-          return join(appRoot, (replacement as Function)(from, request));
+    if (!aliases) return;
+    if (typeof aliases === "function") {
+      aliases(alias);
+      return;
+    }
+
+    if (Array.isArray(aliases)) {
+      aliases.forEach(({ find, replacement }) => {
+        if (typeof replacement === "function") {
+          alias.addAlias(find, ((from: string, request: string) => {
+            // eslint-disable-next-line @typescript-eslint/ban-types
+            return join(appRoot, (replacement as Function)(from, request));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          }) as any);
+        } else {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        }) as any);
-      } else {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        alias.addAlias(find, join(appRoot, replacement as any));
+          alias.addAlias(find, join(appRoot, replacement as any));
+        }
+      });
+    } else {
+      // eslint-disable-next-line functional/no-loop-statement
+      for (const find in aliases) {
+        const replacement = aliases[find];
+
+        if (typeof replacement === "function") {
+          alias.addAlias(find, ((from: string, request: string) => {
+            // eslint-disable-next-line @typescript-eslint/ban-types
+            return join(appRoot, (replacement as Function)(from, request));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          }) as any);
+        } else {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          alias.addAlias(find, join(appRoot, replacement as any));
+        }
       }
     }
   }
+  // eslint-disable-next-line functional/immutable-data
+  config.alias = __bindAlias;
 
   return config as Omit<DefineConfig, "alias" | "paths">;
 }
