@@ -22,9 +22,11 @@ if (existsFileConfig("express.config.json")) {
     fs.readFileSync(path.join(rootPath, "express.config.json"), "utf8")
   );
 } else if (existsFileConfig("express.config.js")) {
-  configs = require(path.join(rootPath, "express.config.js"));
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  configs = require(path.join(rootPath, "express.config.js")).default;
 } else if (existsFileConfig("express.config.ts")) {
-  configs = require(path.join(rootPath, "express.config.ts"));
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  configs = require(path.join(rootPath, "express.config.ts")).default;
 }
 
 export default configs as ReturnType<typeof defineConfig>;
