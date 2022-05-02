@@ -143,7 +143,7 @@ function loadAllRoutes(srcToRoutes: string) {
         }
 
         const router = Router();
-        const route = router.route("/");
+        const route = router.route(prefix);
         // eslint-disable-next-line functional/no-loop-statement
         for (const method in exported.default) {
           if (method === "middleware") continue;
@@ -242,8 +242,8 @@ export function usePage(app: Express, appRoot: string): Router {
 
   const routes = loadAllRoutes(url);
 
-  routes.forEach(({ prefix, router }) => {
-    app.use(prefix, router);
+  routes.forEach(({ router }) => {
+    app.use("/", router);
   });
 
   rootConfigs.router?.extendRoutes?.(app, routes);

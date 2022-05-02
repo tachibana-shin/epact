@@ -1,4 +1,4 @@
-import { router } from "../../../src";
+import { router } from "../../../../src";
 
 export default router<{
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -8,7 +8,7 @@ export default router<{
       // eslint-disable-next-line functional/prefer-readonly-type
       id: number;
     };
-      // eslint-disable-next-line functional/prefer-readonly-type
+    // eslint-disable-next-line functional/prefer-readonly-type
     body: {
       // eslint-disable-next-line functional/prefer-readonly-type
       message: string;
@@ -16,9 +16,8 @@ export default router<{
   };
 }>({
   get(req, res) {
-    req.body.message
     res.json({
-message: 12
-    })
+      message: req.params.id,
+    });
   },
 });
