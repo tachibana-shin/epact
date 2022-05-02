@@ -1,14 +1,16 @@
 import express, { Express } from "express";
 
-import { useBoot, useRouter } from "..";
 import { warn } from "../helpers/log";
 import rootConfigs from "../helpers/root-configs";
 
+import { useBoot } from "./boot";
+import { usePage } from "./page";
+
 // eslint-disable-next-line functional/no-let
 let app: Express;
-export function createApp(port = rootConfigs.port || "3000"): Express {
+export function createApp(port = rootConfigs.port || 3000): Express {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const appRoot = require.main!.path//
+  const appRoot = require.main!.path; //
 
   if (!app) {
     app = express();
@@ -16,7 +18,11 @@ export function createApp(port = rootConfigs.port || "3000"): Express {
     // install boot
     useBoot(app, appRoot);
     // install router & middleware
-    useRouter(app, appRoot);
+    usePage(app, appRoot);
+    // install plugins
+    rootConfigs.plugins?.forEach((plugin) => {
+      plugin(app, appRoot);
+    });
 
     app.listen(port, () => {
       console.log(`⚡️ App it running on port ${port}`);

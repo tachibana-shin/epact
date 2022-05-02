@@ -70,7 +70,10 @@ type AllOfArray<T> = T extends readonly any[] ? T : readonly T[];
 type Middleware = AllOfArray<string | RequestHandler | ErrorRequestHandler>;
 
 function loadAllRoutes(srcToRoutes: string) {
-  const files = globbySync(path.join(srcToRoutes, "**/*.{ts,js}"));
+  const files = globbySync([
+    path.join(srcToRoutes, "**/*.{ts,js}"),
+    "!*/\\!*/*",
+  ]);
 
   return (
     files
@@ -234,8 +237,8 @@ function loadArrayMiddleware(
     .filter(Boolean);
 }
 
-export function useRouter(app: Express, appRoot: string): Router {
-  const url = path.join(appRoot, "routes");
+export function usePage(app: Express, appRoot: string): Router {
+  const url = path.join(appRoot, "pages");
 
   const routes = loadAllRoutes(url);
 
@@ -243,7 +246,7 @@ export function useRouter(app: Express, appRoot: string): Router {
     app.use(prefix, router);
   });
 
-  rootConfigs.router?.extendRoutes(app);
+  rootConfigs.router?.extendRoutes?.(app, routes);
 
   return app;
 }
@@ -264,13 +267,19 @@ export function installMiddleware(
   middlewareGlobalStore.set(name, middleware);
 }
 
-export function router<
+// eslint-disable-next-line functional/prefer-readonly-type
+type AllParamsDefault = {
+  [key in Methods]: Record<keyof TypesForRequestHandlerParams, unknown>;
+};
+function page<
   // eslint-disable-next-line functional/prefer-readonly-type
-  Params extends {
-    [key in Methods]: Partial<
+  ParamsCustom extends {
+    [key in Methods]?: Partial<
       Record<keyof TypesForRequestHandlerParams, unknown>
     >;
-  }
+  },
+  Params extends AllParamsDefault & ParamsCustom = AllParamsDefault &
+    ParamsCustom
 >(
   opts: // eslint-disable-next-line functional/prefer-readonly-type
   | ({
@@ -300,3 +309,6 @@ export function router<
 
   return opts;
 }
+
+const router = page;
+export { router, page };

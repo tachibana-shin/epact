@@ -9,13 +9,16 @@ export default router<{
       id: number;
     };
       // eslint-disable-next-line functional/prefer-readonly-type
-    resBody: {
+    body: {
       // eslint-disable-next-line functional/prefer-readonly-type
       message: string;
     };
   };
 }>({
   get(req, res) {
-    req.params.id;
+    req.body.message
+    res.json({
+message: 12
+    })
   },
 });
