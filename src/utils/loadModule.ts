@@ -22,7 +22,8 @@ export default function loadModule<
     };
   } catch (err) {
     return {
-      exported: null,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      exported: {} as any,
       source: src,
       error: err,
     };

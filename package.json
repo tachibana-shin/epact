@@ -2,7 +2,7 @@
   "name": "express-fw",
   "description": "A simple wrapper for expressa simple wrapper for express",
   "author": "Nguyen Thanh",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "main": "dist/index.mjs",
   "exports": {
     ".": {
