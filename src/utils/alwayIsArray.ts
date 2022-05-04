@@ -9,7 +9,7 @@ export default function alwayIsArray<T, R = T extends any[] ? T : T[]>(
   }
 
   if (Array.isArray(template)) {
-    return template.map((item) => alwayIsArray(item)) as any;
+    return template.map((item) => alwayIsArray(item)).flat(1) as any;
   }
 
   if (template) {
