@@ -93,11 +93,11 @@ function loadAllRoutes(srcToRoutes: string) {
         }
         const dir = dirname(srcToRoutes);
 
-        const middleware =
-          "middleware" in exported
-            ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              loadMiddleware(dir, (exported as any).middleware)
-            : null;
+        const middleware = loadMiddleware(
+          dir,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          exported.middleware || (exported.default as any).middleware
+        );
 
         if (exported.default instanceof Router) {
           // cracker;
@@ -149,6 +149,7 @@ function loadAllRoutes(srcToRoutes: string) {
           if (method === "middleware") continue;
 
           route[method as Methods](
+            ...(middleware?.all || []),
             ...(middleware?.[method] || []),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ...(alwayIsArray((exported.default as any)[method] ?? []) as any)
@@ -297,7 +298,16 @@ function page<
           | string
           | string
           // eslint-disable-next-line functional/prefer-readonly-type
-          | (string | RequestHandler)[];
+          | (string | RequestHandler)[]
+          // eslint-disable-next-line functional/prefer-readonly-type
+          | {
+              [name in Methods]?:
+                | RequestHandler
+                | string
+                | string
+                // eslint-disable-next-line functional/prefer-readonly-type
+                | (string | RequestHandler)[];
+            };
       })
     | RequestHandlerFlatParams<Params["get"]>
 ) {
