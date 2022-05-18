@@ -1,8 +1,8 @@
 {
-  "name": "express-fw",
+  "name": "express-fw-next",
   "description": "A simple wrapper for expressa simple wrapper for express",
   "author": "Nguyen Thanh",
-  "version": "0.1.10",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "exports": {
     ".": {
@@ -22,7 +22,6 @@
   "keywords": [],
   "scripts": {
     "build": "tsup-node",
-    "prepublishOnly": "pnpm build",
     "test": "jest"
   },
   "engines": {

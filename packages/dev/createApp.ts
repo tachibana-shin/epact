@@ -3,7 +3,7 @@ import express, { Express } from "express";
 import { warn } from "../helpers/log";
 import rootConfigs from "../helpers/root-configs";
 
-import { useBoot } from "./boot";
+import { useBoot } from "../packages/dev/boot";
 import { usePage } from "./page";
 
 // eslint-disable-next-line functional/no-let
