@@ -3,7 +3,7 @@
   "description": "A simple wrapper for expressa simple wrapper for express",
   "author": "Nguyen Thanh",
   "version": "0.1.9",
-  "main": "dist/index.mjs",
+  "main": "dist/index.js",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
