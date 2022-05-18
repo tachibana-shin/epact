@@ -1,8 +1,6 @@
-import path from "path";
+const path = require("path")
 
-import { defineConfig } from "../src";
-
-export default defineConfig({
+export default ({
   port: 3000,
   boot: ["dotenv", "plugins"],
   alias: {

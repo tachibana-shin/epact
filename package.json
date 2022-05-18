@@ -2,7 +2,7 @@
   "name": "express-fw-next",
   "description": "A simple wrapper for expressa simple wrapper for express",
   "author": "Nguyen Thanh",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/index.js",
   "exports": {
     ".": {
@@ -10,10 +10,11 @@
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./": "./dist/"
+    "./dist/": "./dist/"
   },
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "bin": "dist/cli/index.js",
   "files": [
     "dist"
   ],
@@ -29,6 +30,7 @@
   },
   "dependencies": {
     "app-root-path": "^3.0.0",
+    "esno": "0.16.1",
     "globby": "^13.1.1",
     "module-alias": "^2.2.2"
   },
