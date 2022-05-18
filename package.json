@@ -2,7 +2,7 @@
   "name": "express-fw-next",
   "description": "A simple wrapper for expressa simple wrapper for express",
   "author": "Nguyen Thanh",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/index.js",
   "exports": {
     ".": {
