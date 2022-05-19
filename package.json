@@ -34,11 +34,9 @@
     "node": ">=10"
   },
   "dependencies": {
-    "app-root-path": "^3.0.0",
     "chalk": "^5.0.1",
     "chokidar": "^3.5.3",
     "commander": "^9.2.0",
-    "esno": "0.16.1",
     "globby": "^13.1.1",
     "joycon": "^3.1.1",
     "module-alias": "^2.2.2",
