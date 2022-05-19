@@ -27,7 +27,8 @@
   "keywords": [],
   "scripts": {
     "build": "tsup-node",
-    "test": "jest"
+    "test": "jest",
+    "prepublishOnly": "pnpm build"
   },
   "engines": {
     "node": ">=10"
