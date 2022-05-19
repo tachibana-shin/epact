@@ -16,6 +16,7 @@
   "types": "./dist/core/index.d.ts",
   "bin": {
     "express": "./dist/cli/index.mjs",
+    "express-fw-next": "./dist/cli/index.mjs",
     "exp": "./dist/cli/index.mjs"
   },
   "files": [

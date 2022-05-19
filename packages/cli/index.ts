@@ -2,6 +2,7 @@
 import { program } from "commander";
 
 import build from "./command/build";
+import dev from "./command/dev";
 
 program
   .command("build")
@@ -84,6 +85,11 @@ program
       buildMode: true,
     });
   });
-program.command("dev").description("Start app in development debug");
+program
+  .command("dev")
+  .description("Start app in development debug")
+  .action(() => {
+    dev();
+  });
 
 program.parse();
