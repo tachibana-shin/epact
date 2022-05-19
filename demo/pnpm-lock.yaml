@@ -11,6 +11,9 @@ specifiers:
   '@types/supertest': ^2.0.11
   '@typescript-eslint/eslint-plugin': ^5.1.0
   '@typescript-eslint/parser': ^5.1.0
+  bundle-require: ^3.0.4
+  chalk: ^5.0.1
+  chokidar: ^3.5.3
   cookie-parser: ^1.4.5
   dotenv: ^8.2.0
   esbuild-node-tsc: ^1.7.0
@@ -35,6 +38,8 @@ specifiers:
   typescript: ^4.6.4
 
 dependencies:
+  bundle-require: 3.0.4
+  chokidar: 3.5.3
   cookie-parser: 1.4.6
   dotenv: 8.6.0
   express: 4.18.0
@@ -57,6 +62,7 @@ devDependencies:
   '@types/supertest': 2.0.12
   '@typescript-eslint/eslint-plugin': 5.21.0_h4vysr2bqzt4hffakdaua34xga
   '@typescript-eslint/parser': 5.21.0_e4zyhrvfnqudwdx5bevnvkluy4
+  chalk: 5.0.1
   esbuild-node-tsc: 1.8.5_typescript@4.6.4
   eslint: 7.32.0
   eslint-config-prettier: 6.15.0_eslint@7.32.0
@@ -803,6 +809,15 @@ packages:
     resolution: {integrity: sha512-qhAVI1+Av2X7qelOfAIYwXONood6XlZE/fXaBSmW/T5SzLAmCgzi+eiWE7fUvbHaeNBQH13UftjpXxsfLkMpgw==}
     dev: true
 
+  /bundle-require/3.0.4:
+    resolution: {integrity: sha512-VXG6epB1yrLAvWVQpl92qF347/UXmncQj7J3U8kZEbdVZ1ZkQyr4hYeL/9RvcE8vVVdp53dY78Fd/3pqfRqI1A==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    peerDependencies:
+      esbuild: '>=0.13'
+    dependencies:
+      load-tsconfig: 0.2.3
+    dev: false
+
   /bundle-require/3.0.4_esbuild@0.14.38:
     resolution: {integrity: sha512-VXG6epB1yrLAvWVQpl92qF347/UXmncQj7J3U8kZEbdVZ1ZkQyr4hYeL/9RvcE8vVVdp53dY78Fd/3pqfRqI1A==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -886,6 +901,11 @@ packages:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
+    dev: true
+
+  /chalk/5.0.1:
+    resolution: {integrity: sha512-Fo07WOYGqMfCWHOzSXOt2CxDbC6skS/jO9ynEcmpANMoPrD+W1r1K6Vx7iNm+AQmETU1Xr2t+n8nzkV9t6xh3w==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
     dev: true
 
   /chokidar/3.5.3:

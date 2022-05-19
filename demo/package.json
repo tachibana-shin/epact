@@ -14,6 +14,8 @@
   "author": "tachibana-shin <thanhnguyennguyen1995@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "bundle-require": "^3.0.4",
+    "chokidar": "^3.5.3",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -36,6 +38,7 @@
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
+    "chalk": "^5.0.1",
     "esbuild-node-tsc": "^1.7.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^6.11.0",
