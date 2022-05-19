@@ -9,8 +9,7 @@
       "import": "./dist/core/index.mjs",
       "require": "./dist/core/index.js",
       "types": "./dist/core/index.d.ts"
-    },
-    "./dist/": "./dist/"
+    }
   },
   "module": "./dist/core/index.mjs",
   "types": "./dist/core/index.d.ts",
@@ -37,6 +36,8 @@
     "chalk": "^5.0.1",
     "chokidar": "^3.5.3",
     "commander": "^9.2.0",
+    "cross-spawn": "^7.0.3",
+    "esbuild-register": "^3.3.2",
     "globby": "^13.1.1",
     "joycon": "^3.1.1",
     "module-alias": "^2.2.2",

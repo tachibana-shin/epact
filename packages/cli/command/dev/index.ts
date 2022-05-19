@@ -1,4 +1,4 @@
-import { execSync } from "child_process";
+import { spawn } from "child_process";
 import { basename, join, relative } from "path";
 
 import chalk from "chalk";
@@ -58,7 +58,8 @@ export default async function dev() {
       },
       ignoreInitial: true,
     })
-    .on("all", (action, path) => onPageChange(path, action));
+    .on("add", (path) => onPageChange(path, "add"))
+    .on("remove", (path) => onPageChange(path, "deleted"));
 }
 
 function startApp(cwd: string, port = 3000, filename?: string, clear = true) {
@@ -67,5 +68,11 @@ function startApp(cwd: string, port = 3000, filename?: string, clear = true) {
     chalk.bgBlue("express:start") +
       chalk.green(chalk.bold(` start app at port ${port}!`))
   );
-  execSync(`npx tsx watch ${join(cwd, `.express/${filename || "main.ts"}`)}`);
+  spawn(
+    "npx",
+    ["tsx", "watch", join(cwd, `.express/${filename || "main.ts"}`)],
+    {
+      stdio: "inherit",
+    }
+  );
 }

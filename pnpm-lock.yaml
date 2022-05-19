@@ -11,7 +11,9 @@ specifiers:
   chalk: ^5.0.1
   chokidar: ^3.5.3
   commander: ^9.2.0
+  cross-spawn: ^7.0.3
   cspell: ^4.1.0
+  esbuild-register: ^3.3.2
   eslint: ^7.8.0
   eslint-config-prettier: ^6.11.0
   eslint-plugin-eslint-comments: ^3.2.0
@@ -32,6 +34,8 @@ dependencies:
   chalk: 5.0.1
   chokidar: 3.5.3
   commander: 9.2.0
+  cross-spawn: 7.0.3
+  esbuild-register: 3.3.2
   globby: 13.1.1
   joycon: 3.1.1
   module-alias: 2.2.2
@@ -2092,6 +2096,12 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /esbuild-register/3.3.2:
+    resolution: {integrity: sha512-jceAtTO6zxPmCfSD5cBb3rgIK1vmuqCKYwgylHiS1BF4pq0jJiJb4K2QMuqF4BEw7XDBRatYzip0upyTzfkgsQ==}
+    peerDependencies:
+      esbuild: '>=0.12 <1'
+    dev: false
 
   /esbuild-sunos-64/0.14.38:
     resolution: {integrity: sha512-2mfIoYW58gKcC3bck0j7lD3RZkqYA7MmujFYmSn9l6TiIcAMpuEvqksO+ntBgbLep/eyjpgdplF7b+4T9VJGOA==}
