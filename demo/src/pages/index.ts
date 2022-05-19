@@ -1,4 +1,4 @@
-import { router } from "express-fw";
+import { router } from "express-fw-next";
 
 export default router<{
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -17,7 +17,7 @@ export default router<{
 }>({
   get(req, res) {
     res.json({
-      message: req.params.id,
+      message: "Hello express",
     });
   },
 });

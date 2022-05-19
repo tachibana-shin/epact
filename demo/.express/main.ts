@@ -12,13 +12,11 @@ import { createBoot } from "express-fw-next"
 })
 import page__src_pages_index_ts from "../src/pages/index.ts";
 import page__src_pages__id_index_ts from "../src/pages/_id/index.ts";
-import page__src_pages_manga__id_ts from "../src/pages/manga/_id.ts";
 import page__src_pages_manga_chap__chap_ts from "../src/pages/manga/chap-_chap.ts";
 import { createPage } from "express-fw-next";
 
 app.use("/", createPage("/", page__src_pages_index_ts).router);
 app.use("/", createPage("/:id/", page__src_pages__id_index_ts).router);
-app.use("/", createPage("/manga/:id", page__src_pages_manga__id_ts).router);
 app.use("/", createPage("/manga/chap-:chap", page__src_pages_manga_chap__chap_ts).router);
 
 app.listen(3000, () => {
