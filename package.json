@@ -15,7 +15,8 @@
   "module": "./dist/core/index.mjs",
   "types": "./dist/core/index.d.ts",
   "bin": {
-    "express": "./dist/cli/index.js"
+    "express": "./dist/cli/index.mjs",
+    "exp": "./dist/cli/index.mjs"
   },
   "files": [
     "dist"
