@@ -4,7 +4,6 @@ import TypesForRequestHandlerParams, {
   RequestHandlerFlatParams,
 } from "./type/TypesForRequestHandlerParams";
 import alwayIsArray from "./utils/alwayIsArray";
-import parsePrefixRouter from "./utils/parsePrefixRouter";
 
 const middlewareGlobalStore = new Map();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -81,11 +80,9 @@ function loadArrayMiddleware(
 }
 
 export default function createPage(
-  path: string,
+  prefix: string,
   $page: ReturnType<typeof page>
 ) {
-  const prefix = parsePrefixRouter(path);
-
   const middleware = loadMiddleware($page.middleware);
 
   if ($page instanceof Router) {

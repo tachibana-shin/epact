@@ -3,11 +3,20 @@ import { join } from "path";
 
 import type { Express, Router } from "express";
 import type alias from "module-alias";
+import { Format, Options } from "tsup";
 type Alias = typeof alias;
 
 export type DefineConfig = {
+  filename?: string;
   port?: number;
   boot?: string[];
+  env?: {
+    [name: string]: string;
+  };
+  define?:  {
+    [name: string]: string;
+  }
+  loader?: Options["loader"]
   alias?: // eslint-disable-next-line functional/no-return-void
   | ((aliases: Alias) => void)
     | Record<
@@ -22,6 +31,10 @@ export type DefineConfig = {
       }[];
   paths?: string[];
   router?: {
+    routes?: {
+      find: string;
+      replacement: string;
+    }[];
     extendRoutes?: (
       app: Express,
       routes: {
@@ -33,6 +46,33 @@ export type DefineConfig = {
   };
   // eslint-disable-next-line functional/no-return-void
   plugins?: ((app: Express, appRoot: string) => void)[];
+
+
+  build?: {
+    systemless?: boolean;
+    watch?: boolean;
+    outDir?: string;
+    format: Format | Format[];
+    noMinify?: boolean;
+    keepNames?: boolean;
+    target?: string;
+    sourcemap?: false | "inline"
+    ignoreWatch?: string | string[];
+    onSuccess?: string;
+    env?: {
+      [name: string]: string;
+    }
+    inject?: string[];
+    define?:  {
+      [name: string]: string;
+    }
+    external?: string[]
+    jsxFactory?: string;
+    jsxFragment?: string;
+    noSplitting?: boolean;
+    silent?: boolean;
+    metafile?: boolean;
+  }
 };
 
 export default function defineConfig(config: DefineConfig, appRoot: string) {
