@@ -26,7 +26,7 @@ export type DefineConfig = {
     systemless?: boolean;
     watch?: boolean;
     outDir?: string;
-    format: Format | Format[];
+    format?: Format | Format[];
     noMinify?: boolean;
     keepNames?: boolean;
     target?: string;
