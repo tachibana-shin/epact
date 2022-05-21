@@ -1,8 +1,10 @@
-import { spawn } from "child_process";
+import { ChildProcess } from "child_process";
 import { basename, join, relative } from "path";
+import { fileURLToPath } from "url";
 
 import chalk from "chalk";
-import chokidar from "chokidar";
+import chokidar, { watch } from "chokidar";
+import spawn from "cross-spawn";
 
 import { getFilepathExpressConfig } from "../../utils/loadExpressConfig";
 import loadExpressConfig from "../../utils/loadExpressConfig";
@@ -21,7 +23,7 @@ export default async function dev() {
       },
     })
     .on("change", (path) => {
-      console.clear();
+      process.stdout.write("\u001Bc");
       console.log(
         chalk.green(
           `╔════════════════════════════════════════════╗
@@ -62,17 +64,76 @@ export default async function dev() {
     .on("remove", (path) => onPageChange(path, "deleted"));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isDependencyPath(data: any): data is {
+  // eslint-disable-next-line functional/prefer-readonly-type
+  type: "dependency";
+  // eslint-disable-next-line functional/prefer-readonly-type
+  path: string;
+} {
+  return data && "type" in data && data.type === "dependency";
+}
+
+// eslint-disable-next-line functional/no-let
+let watcher: ReturnType<typeof watch> | null = null;
 function startApp(cwd: string, port = 3000, filename?: string, clear = true) {
-  if (clear) console.clear();
+  if (clear) process.stdout.write("\u001Bc");
+
+  const fileMain = join(cwd, `.express/${filename || "main.ts"}`);
+
   console.log(
     chalk.bgBlue("express:start") +
       chalk.green(chalk.bold(` start app at port ${port}!`))
   );
-  spawn(
-    "npx",
-    ["tsx", "watch", join(cwd, `.express/${filename || "main.ts"}`)],
-    {
-      stdio: "inherit",
+
+  // eslint-disable-next-line functional/no-let
+  let runProcess: ChildProcess | undefined;
+  function reRun() {
+    if (runProcess && !runProcess.killed && runProcess.exitCode === null) {
+      runProcess.kill();
     }
-  );
+
+    process.stdout.write("\u001Bc");
+
+    runProcess = spawn(
+      process.execPath,
+      ["--loader", "esm-loader-fix", fileMain],
+      {
+        stdio: ["inherit", "inherit", "inherit", "ipc"],
+      }
+    );
+
+    runProcess.on("message", (data) => {
+      // Collect run-time dependencies to watch
+      if (isDependencyPath(data)) {
+        const dependencyPath = data.path.startsWith("file:")
+          ? fileURLToPath(data.path)
+          : data.path;
+
+        if (!dependencyPath.startsWith("/")) return;
+        // console.log('adding', dependencyPath);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        watcher!.add(dependencyPath);
+      }
+    });
+  }
+
+  reRun();
+
+  watcher?.close();
+
+  watcher = watch(fileMain, {
+    ignoreInitial: true,
+    ignored: [
+      // Hidden directories like .git
+      "**/.*/**",
+
+      // 3rd party packages
+      "**/{node_modules,bower_components,vendor}/**",
+
+      // Distribution files
+      "**/dist/**",
+    ],
+    ignorePermissionErrors: true,
+  }).on("all", reRun);
 }
