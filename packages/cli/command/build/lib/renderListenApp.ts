@@ -3,7 +3,7 @@ export default function renderListenApp(port: number | string | false) {
 
   return `
 app.listen(${port}, () => {
-  console.log(\`⚡App is running at port \$\{${port}\}\`)
+  console.log(\`⚡App is running at port $\{${port}\}\`)
 })
   `;
 }
