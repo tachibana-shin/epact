@@ -5,10 +5,9 @@ import TypesForRequestHandlerParams, {
 } from "./type/TypesForRequestHandlerParams";
 import alwayIsArray from "./utils/alwayIsArray";
 
-const middlewareGlobalStore = new Map();
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AllOfArray<T> = T extends readonly any[] ? T : readonly T[];
-type Middleware = AllOfArray<string | RequestHandler | ErrorRequestHandler>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
+type AllOfArray<T> = T extends any[] ? T : T[];
+type Middleware = AllOfArray<RequestHandler | ErrorRequestHandler>;
 type Methods =
   | "all"
   | "checkout"
@@ -63,20 +62,11 @@ function loadArrayMiddleware(
   list: Middleware
   // eslint-disable-next-line functional/prefer-readonly-type
 ): (RequestHandler | ErrorRequestHandler)[] {
-  return alwayIsArray(list)
-    .map((handler) => {
-      if (typeof handler === "function") {
-        return handler;
-      }
-
-      if (middlewareGlobalStore.has(handler)) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return middlewareGlobalStore.get(handler)!;
-      }
-
-      return middlewareGlobalStore.get(handler);
-    })
-    .filter(Boolean);
+  return (
+    alwayIsArray(list)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .filter(Boolean) as any
+  );
 }
 
 export default function createPage(
@@ -155,30 +145,13 @@ export default function createPage(
   };
 }
 
-export function installMiddleware(
-  name: string,
-  middleware: RequestHandler
-  // eslint-disable-next-line functional/no-return-void
-): void {
-  if (middlewareGlobalStore.has(name)) {
-    console.warn(
-      `\x1b[33m;[express-fw]: "${name}" middleware already exists.\x1b[0m`
-    );
-  }
-
-  if (typeof middleware !== "function") {
-    console.error(
-      `\x1b[31m;[express-fw]: (process install ${name}) a middleware must be a function.\x1b[0m`
-    );
-  }
-
-  middlewareGlobalStore.set(name, middleware);
-}
-
 // eslint-disable-next-line functional/prefer-readonly-type
 type AllParamsDefault = {
   [key in Methods]: Record<keyof TypesForRequestHandlerParams, unknown>;
 };
+
+// eslint-disable-next-line functional/prefer-readonly-type
+type TorArray<T> = T | T[];
 function page<
   // eslint-disable-next-line functional/prefer-readonly-type
   ParamsCustom extends {
@@ -191,29 +164,14 @@ function page<
 >(
   opts: // eslint-disable-next-line functional/prefer-readonly-type
   | ({
-        [name in Methods]?:
-          | RequestHandlerFlatParams<Params[name]>
-          | string
-          // eslint-disable-next-line functional/prefer-readonly-type
-          | string[]
-          // eslint-disable-next-line functional/prefer-readonly-type
-          | (string | RequestHandlerFlatParams<Params[name]>)[];
+        [name in Methods]?: TorArray<RequestHandlerFlatParams<Params[name]>>;
       } & {
         // eslint-disable-next-line functional/prefer-readonly-type
         middleware?:
-          | RequestHandler
-          | string
-          | string
-          // eslint-disable-next-line functional/prefer-readonly-type
-          | (string | RequestHandler)[]
+          | TorArray<RequestHandler>
           // eslint-disable-next-line functional/prefer-readonly-type
           | {
-              [name in Methods]?:
-                | RequestHandler
-                | string
-                | string
-                // eslint-disable-next-line functional/prefer-readonly-type
-                | (string | RequestHandler)[];
+              [name in Methods]?: TorArray<RequestHandler>;
             };
       })
     | RequestHandlerFlatParams<Params["get"]>
