@@ -27,7 +27,8 @@
   "scripts": {
     "build": "tsup-node",
     "test": "jest",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "test:ts": "tsc --noEmit"
   },
   "engines": {
     "node": ">=10"
