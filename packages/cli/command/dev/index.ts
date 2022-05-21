@@ -1,10 +1,10 @@
 import { ChildProcess } from "child_process";
+import { spawn } from "child_process";
 import { basename, join, relative } from "path";
 import { fileURLToPath } from "url";
 
 import chalk from "chalk";
 import { watch } from "chokidar";
-import spawn from "cross-spawn";
 
 import { version as VERSION } from "../../../../package.json";
 import { getFilepathExpressConfig } from "../../utils/loadExpressConfig";
