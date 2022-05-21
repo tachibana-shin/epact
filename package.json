@@ -43,6 +43,7 @@
     "globby": "^13.1.1",
     "joycon": "^3.1.1",
     "module-alias": "^2.2.2",
+    "semver": "^7.3.7",
     "tsup": "^5.12.6",
     "tsx": "^3.4.0",
     "tsx-fix": "0.0.0-semantic-release"
@@ -54,6 +55,7 @@
     "@types/jest": "^27.4.1",
     "@types/module-alias": "^2.0.1",
     "@types/node": "^16.11.1",
+    "@types/semver": "^7.3.9",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "cspell": "^4.1.0",

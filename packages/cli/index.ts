@@ -3,6 +3,7 @@ import { program } from "commander";
 
 import build from "./command/build";
 import dev from "./command/dev";
+import upgrade from "./command/upgrade";
 
 program
   .command("build")
@@ -90,6 +91,13 @@ program
   .description("Start app in development debug")
   .action(() => {
     dev();
+  });
+program
+  .command("upgrade")
+  .description("Upgrade express-fw")
+  .option("-i, --install", "Check update and install last version")
+  .action(({ install }) => {
+    upgrade(install);
   });
 
 program.parse();
