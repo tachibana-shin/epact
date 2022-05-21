@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "yarn build && node ./dist/index.js",
-    "dev": "nodemon",
+    "dev": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs dev",
     "build": "tsup ./express/main.ts",
     "lint": "eslint --fix",
     "test": "mocha --exit"
@@ -14,9 +14,11 @@
   "author": "tachibana-shin <thanhnguyennguyen1995@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@esbuild-kit/esm-loader": "^2.1.0",
     "bundle-require": "^3.0.4",
     "chokidar": "^3.5.3",
     "cookie-parser": "^1.4.5",
+    "cross-spawn": "^7.0.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-fw": "^0.1.6",
@@ -25,7 +27,7 @@
     "http-errors": "^1.8.0",
     "morgan": "^1.10.0",
     "tsup": "^5.12.8",
-    "tsx": "^3.2.1"
+    "tsx": "^3.4.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",

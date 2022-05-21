@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@esbuild-kit/esm-loader': ^2.1.0
   '@types/cookie-parser': ^1.4.2
   '@types/express': ^4.17.11
   '@types/http-errors': ^1.8.0
@@ -15,6 +16,7 @@ specifiers:
   chalk: ^5.0.1
   chokidar: ^3.5.3
   cookie-parser: ^1.4.5
+  cross-spawn: ^7.0.3
   dotenv: ^8.2.0
   esbuild: ^0.14.39
   esbuild-node-tsc: ^1.7.0
@@ -35,13 +37,15 @@ specifiers:
   nodemon: ^2.0.14
   supertest: ^6.1.6
   tsup: ^5.12.8
-  tsx: ^3.2.1
+  tsx: ^3.4.0
   typescript: ^4.6.4
 
 dependencies:
+  '@esbuild-kit/esm-loader': 2.1.0
   bundle-require: 3.0.4_esbuild@0.14.39
   chokidar: 3.5.3
   cookie-parser: 1.4.6
+  cross-spawn: 7.0.3
   dotenv: 8.6.0
   express: 4.18.0
   express-fw: 0.1.6
@@ -50,7 +54,7 @@ dependencies:
   http-errors: 1.8.1
   morgan: 1.10.0
   tsup: 5.12.8_typescript@4.6.4
-  tsx: 3.2.1
+  tsx: 3.4.0
 
 devDependencies:
   '@types/cookie-parser': 1.4.3
@@ -107,24 +111,10 @@ packages:
       get-tsconfig: 3.0.1
     dev: false
 
-  /@esbuild-kit/core-utils/1.1.0:
-    resolution: {integrity: sha512-BPWlYIrfxIrjV3wzHsfOOiXgDWbh3vrveB+kr/ASTctI9tLF/k6bFo9PBiHxMGlbZCyWn8Ry3aeOB15ceHeqFw==}
-    dependencies:
-      esbuild: 0.14.38
-    dev: false
-
   /@esbuild-kit/core-utils/1.1.1:
     resolution: {integrity: sha512-Y5QM1ip6nUvycH8dc/bfNPLNyVt2ccBLB09lAndUvfCza/UwkAfYSiNMbcAnkLcEciEENMm6Lsyt1L98K57v3w==}
     dependencies:
       esbuild: 0.14.38
-    dev: false
-
-  /@esbuild-kit/esm-loader/2.0.0:
-    resolution: {integrity: sha512-Z2wx8CF9N8lcZIL09z5HcIUbEFXzAyicNnPNhuxuDKgzwPqnXO+AjBmyGbrRdzuuLBHi512pJtl6Qi/Q2ZyYBg==}
-    dependencies:
-      '@esbuild-kit/core-utils': 1.1.1
-      es-module-lexer: 0.10.5
-      get-tsconfig: 3.0.1
     dev: false
 
   /@esbuild-kit/esm-loader/2.1.0:
@@ -2130,7 +2120,7 @@ packages:
       joycon: 3.1.1
       module-alias: 2.2.2
       tsup: 5.12.8_typescript@4.6.4
-      tsx: 3.3.1
+      tsx: 3.4.0
     transitivePeerDependencies:
       - postcss
       - supports-color
@@ -4464,19 +4454,8 @@ packages:
       typescript: 4.6.4
     dev: true
 
-  /tsx/3.2.1:
-    resolution: {integrity: sha512-j+Z0kzm/+WMMgbKotcOJml3hHd4Tq1Dr/V5rL82NrNP2dbq0DbyQ9TplIZ1xOZQcsZmb4W1IrK7tueGWyppJjg==}
-    hasBin: true
-    dependencies:
-      '@esbuild-kit/cjs-loader': 2.0.0
-      '@esbuild-kit/core-utils': 1.1.0
-      '@esbuild-kit/esm-loader': 2.0.0
-    optionalDependencies:
-      fsevents: 2.3.2
-    dev: false
-
-  /tsx/3.3.1:
-    resolution: {integrity: sha512-YYaW4+MWtSsc659Olt1XKPl9AEWHTkcb3X1UPe7JHp1ykYuOWJcGQEq4KZYo2Q9lWgTdV4hkxW81M8txJ06srg==}
+  /tsx/3.4.0:
+    resolution: {integrity: sha512-WWakMoC5OqUXvOVZuyAySyETjAZ9rJxZXRbbOhYXDCeHF95hQUBa07UwUFu1yprlnrJ/W7XWfA99YTNKO//KxQ==}
     hasBin: true
     dependencies:
       '@esbuild-kit/cjs-loader': 2.0.0
