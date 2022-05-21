@@ -1,6 +1,6 @@
 import { globbySync } from "globby";
 import { relative, join } from "path";
-import parsePrefixRouter from "../../../../core/utils/parsePrefixRouter";
+import parsePrefixRouter from "../utils/parsePrefixRouter";
 import toVarName from "../utils/toVarName";
 
 export default function renderPage(
