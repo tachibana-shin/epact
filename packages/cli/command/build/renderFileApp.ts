@@ -8,16 +8,21 @@ import renderPage from "./lib/renderPage";
 
 export default function renderFileApp(
   config: ReturnType<typeof defineConfig>,
-  systemless?: boolean
+  devMode: boolean,
+  forceSystemless?: true
 ) {
   const pathToDir = process.cwd();
 
   const code =
     renderApp() +
     renderBoot(config.boot) +
-    renderPage(config.router?.routes) +
+    renderPage(config.router?.routes, config.baseUrl) +
     renderListenApp(
-      systemless || config.build?.systemless ? false : config.port
+      devMode
+        ? config.port ?? 3000
+        : /* build mode */ forceSystemless
+        ? false
+        : config.build?.port ?? config.port ?? 3000
     ) +
     "\nexport default app;";
 

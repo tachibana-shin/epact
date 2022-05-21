@@ -1,5 +1,5 @@
 import { globbySync } from "globby";
-import { relative } from "path";
+import { relative, join } from "path";
 import parsePrefixRouter from "../../../../core/utils/parsePrefixRouter";
 import toVarName from "../utils/toVarName";
 
@@ -7,7 +7,8 @@ export default function renderPage(
   routes?: {
     find: string;
     replacement: string;
-  }[]
+  }[],
+  baseUrl: string = "/"
 ) {
   const pages: {
     name: string;
@@ -21,7 +22,7 @@ export default function renderPage(
         const replacer =
           routes?.find((route) => route.find === finder)?.replacement ?? finder;
 
-        const name = "page__" + toVarName(filename);
+        const name = "page__" + toVarName(join(baseUrl, filename));
         pages.push({ name, filename: replacer });
         return `import ${name} from "../${filename}";`;
       })
@@ -31,8 +32,9 @@ import { createPage } from "express-fw-next";
 
 ${pages
   .map(({ name, filename }) => {
-    return `app.use("/", createPage("${parsePrefixRouter(
-      filename
+    return `app.use("/", createPage("${join(
+      baseUrl,
+      parsePrefixRouter(filename)
     )}", ${name}).router);`;
   })
   .join("\n")}

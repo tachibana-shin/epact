@@ -3,7 +3,7 @@ import { basename, join, relative } from "path";
 import { fileURLToPath } from "url";
 
 import chalk from "chalk";
-import chokidar, { watch } from "chokidar";
+import { watch } from "chokidar";
 import spawn from "cross-spawn";
 
 import { getFilepathExpressConfig } from "../../utils/loadExpressConfig";
@@ -14,32 +14,33 @@ export default async function dev() {
   const cwd = process.cwd();
   const config = await loadExpressConfig();
 
-  renderFileApp(config, false);
+  renderFileApp(config, true);
   startApp(cwd, config.port, config.filename);
-  chokidar
-    .watch([getFilepathExpressConfig() || "package.json", "package.json"], {
-      awaitWriteFinish: {
-        stabilityThreshold: 500,
-      },
-    })
-    .on("change", (path) => {
-      process.stdout.write("\u001Bc");
-      console.log(
-        chalk.green(
-          `╔════════════════════════════════════════════╗
+
+  const pathExpressConfig = getFilepathExpressConfig();
+
+  watch([...(pathExpressConfig ? [pathExpressConfig] : []), "package.json"], {
+    awaitWriteFinish: {
+      stabilityThreshold: 500,
+    },
+  }).on("change", (path) => {
+    process.stdout.write("\u001Bc");
+    console.log(
+      chalk.green(
+        `╔════════════════════════════════════════════╗
 ║                                            ║
 ║    File "${basename(path)}" changed.       ║
 ║                                            ║
 ╚════════════════════════════════════════════╝`
-        )
-      );
+      )
+    );
 
-      renderFileApp(config, false);
-      startApp(cwd, config.port, config.filename, false);
+    renderFileApp(config, true);
+    startApp(cwd, config.port, config.filename, false);
 
-      // .express/${config.filename || "main.ts"}
-      // dev mode
-    });
+    // .express/${config.filename || "main.ts"}
+    // dev mode
+  });
 
   function onPageChange(path: string, action: string) {
     // dir src/pages changed;
@@ -48,18 +49,17 @@ export default async function dev() {
         `======> ${relative(join(cwd, "src/page"), path)} ${action} <======`
       )
     );
-    renderFileApp(config, false);
+    renderFileApp(config, true);
     startApp(cwd, config.port, config.filename);
   }
 
   // handle change src/pages
-  chokidar
-    .watch(join(cwd, "src/pages"), {
-      awaitWriteFinish: {
-        stabilityThreshold: 500,
-      },
-      ignoreInitial: true,
-    })
+  watch(join(cwd, "src/pages"), {
+    awaitWriteFinish: {
+      stabilityThreshold: 500,
+    },
+    ignoreInitial: true,
+  })
     .on("add", (path) => onPageChange(path, "add"))
     .on("remove", (path) => onPageChange(path, "deleted"));
 }
