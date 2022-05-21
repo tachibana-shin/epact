@@ -13,7 +13,7 @@ export default createApp()
 
 ### Boot
 
-Usage `express-fw.config.json`
+Usage `express.config.json`
 
 ``` json
 {
