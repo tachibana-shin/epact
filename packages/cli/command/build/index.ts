@@ -17,7 +17,7 @@ export default async function (
   const config = await loadExpressConfig();
 
   renderFileApp(config, false, options.systemless || undefined);
-
+  
   build({
     entry: [join(pathToDir, ".express/main.ts")],
     splitting: true,
@@ -31,7 +31,7 @@ export default async function (
     ...options,
     loader: config.loader,
     minify:
-      options["no-minify"] === true || config.build?.noMinify || options.debug
+      options["no-minify"] || config.build?.noMinify || options.debug
         ? false
         : true,
     sourcemap: options.debug ? "inline" : options.sourcemap,
@@ -43,5 +43,6 @@ export default async function (
       ...config.env,
       ...options.env,
     },
+    dts: false
   });
 }

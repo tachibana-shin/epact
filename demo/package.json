@@ -6,7 +6,7 @@
   "scripts": {
     "start": "yarn build && node ./dist/index.js",
     "dev": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs dev",
-    "build": "tsup ./express/main.ts",
+    "build": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs build",
     "lint": "eslint --fix",
     "test": "mocha --exit"
   },
