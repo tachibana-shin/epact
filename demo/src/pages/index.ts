@@ -1,3 +1,4 @@
+import http from "boot/plugins"
 import { router } from "express-fw-next";
 import { verify  } from "jsonwebtoken";
 
@@ -17,7 +18,7 @@ export default router<{
   };
 }>({
   get(req, res) {
-    console.log(verify)
+    console.log(http)
     res.json({
       message: "Hello express",
     });
