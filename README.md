@@ -1,24 +1,21 @@
-# express-fw
+# EPACT (Express Package Advanced Typescript)
 
 ## Usage
 ``` bash
-yarn add express-fw
-```
-
-``` ts
-import { createApp } from "express-fw"
-
-export default createApp()
+pnpm create epact
 ```
 
 ### Boot
 
-Usage `express.config.json`
+Usage `epact.config.ts`
 
-``` json
-{
-  "boot": ["my-boot"]
-}
+``` ts
+import { defineConfig } from "epact"
+
+export default defineConfig({
+  port: 3000,
+  boot: ["http", "auth", "my-boot"]
+})
 ```
 
 and create file boot in `src/<name boot>`
@@ -26,7 +23,7 @@ and create file boot in `src/<name boot>`
 `src/my-boot.ts`:
 
 ``` ts
-import { boot } from "express-fw"
+import { boot } from "epact"
 
 export default boot(() => {
   return (err, req, res, next) => {
@@ -42,24 +39,26 @@ And now in the routes directory let's create your routes. express-import-routes 
 
 ```
 project
-└───routes
-│   │   index.js
+└───pages
+│   │   index.ts
 │   │
 │   └───user
 │       │   _id
-│           └─── index.js
+│           └─── index.ts
 │  
-└───app.js
 └───package.json
-└───yarn.lock
+└───pnpm-lock.json
 
 ```
 
 equivalent to
 
-``` js
-const express = require("express")
+``` ts
+import express from "express"
+
 const app = express()
+
+import page
 
 app.route("/", require("./routes/index.js"))
 app.route("/user/:id", require("./routes/_id/index.,js"))
@@ -79,24 +78,29 @@ The file naming rules for configuring routers are the same as nuxtjs. Please ref
 
 The route file in /routes requires you to export some function to render the route
 
-index.js
-``` js
-exports.get = (req, res) => {
-  req.end(`Hello!. This is a route /`)
-}
+index.ts
+``` ts
+import { page } from "epact"
+
+export default page({
+  get(req, res) {
+    req.end(`Hello!. This is a route /`)
+  }
+})
 ```
 
 You can exports. [get | post | put | delete | options] according to the method you want to listen to
 
 The above example is equivalent to
-``` js
-const router = require("express").Router()
+``` ts
+import { Router } from "express"
 
+const router = Router()
 router.route("/").get((req, res) => {
   req.end(`Hello!. This is a route /`)
 })
 
-module.exports = router
+export default router
 ```
 
 ** If you use an additional plugin eg multer you only need to exports an array **

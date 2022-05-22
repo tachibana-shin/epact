@@ -13,6 +13,11 @@ export const Filenames_Config = [
   "express.config.cjs",
   "express.config.mjs",
   "express.config.json",
+  "epact.config.js",
+  "epact.config.ts",
+  "epact.config.cjs",
+  "epact.config.mjs",
+  "epact.config.json",
   "package.json",
 ];
 const CONFIG_DEFAULT: DefineConfig = {

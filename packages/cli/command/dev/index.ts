@@ -24,7 +24,7 @@ function buildFileMain(
   const lastTime = Date.now();
   if (!isUpdated) {
     console.info(
-      chalk.cyan(`  express-fw v${VERSION}`) +
+      chalk.cyan(`  EPACT v${VERSION}`) +
         chalk.green(" app Express running at:\n")
     );
 

@@ -14,7 +14,7 @@ ${boot
   .join("\n")}
 ` +
     `
-import { createBoot } from "express-fw-next"
+import { createBoot } from "epact"
 
 [...createBoot(app, ${bootNames.join(
       "), ...createBoot(app, "

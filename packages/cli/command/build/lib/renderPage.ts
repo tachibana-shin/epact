@@ -28,7 +28,7 @@ export default function renderPage(
       })
       .join("\n") +
     `
-import { createPage } from "express-fw-next";
+import { createPage } from "epact";
 
 ${pages
   .map(({ name, filename }) => {

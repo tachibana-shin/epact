@@ -7,8 +7,7 @@ import dev from "./command/dev";
 
 program
   .command("build")
-  .description("build app express-fw")
-  .option("-sl, --systemless", "build for systemless")
+  .description("build app EPACT build for systemless")
   .option(
     "-w, --watch [path]",
     // eslint-disable-next-line quotes
