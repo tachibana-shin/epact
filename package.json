@@ -34,9 +34,9 @@
     "node": ">=10"
   },
   "dependencies": {
-    "@esbuild-kit/cjs-loader": "^2.0.0",
     "chalk": "^5.0.1",
     "chokidar": "^3.5.3",
+    "cjs-loader-fix": "0.0.0-semantic-release",
     "commander": "^9.2.0",
     "esm-loader-fix": "^0.0.3",
     "globby": "^13.1.1",
