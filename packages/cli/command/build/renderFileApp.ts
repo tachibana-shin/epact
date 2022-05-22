@@ -5,6 +5,7 @@ import renderApp from "./lib/renderApp";
 import renderBoot from "./lib/renderBoot";
 import renderListenApp from "./lib/renderListenApp";
 import renderPage from "./lib/renderPage";
+import renderPublic from "./lib/renderPublic";
 
 export default function renderFileApp(
   config: ReturnType<typeof defineConfig>,
@@ -24,6 +25,7 @@ export default function renderFileApp(
         ? false
         : config.build?.port ?? config.port ?? 3000
     ) +
+    renderPublic(config, devMode, pathToDir) +
     "\nexport default app;";
 
   if (!existsSync(join(pathToDir, ".express"))) {
