@@ -1,4 +1,5 @@
 import { router } from "express-fw-next";
+import { verify  } from "jsonwebtoken";
 
 export default router<{
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -16,8 +17,9 @@ export default router<{
   };
 }>({
   get(req, res) {
+    console.log(verify)
     res.json({
       message: "Hello express",
     });
   },
-}
+})

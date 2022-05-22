@@ -12,5 +12,9 @@ export default boot(() => {
     cookieParser(),
     express.urlencoded({ extended: true }),
     express.json(),
+    (req, res, next) => {
+      req.user = "shin"
+      next()
+    }
   ]
 });

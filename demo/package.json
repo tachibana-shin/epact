@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "A Express.js project",
   "main": "./src/main.ts",
-  "type": "module",
   "scripts": {
     "start": "yarn build && node ./dist/index.js",
     "dev": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs dev",
@@ -20,11 +19,13 @@
     "cookie-parser": "^1.4.5",
     "cross-spawn": "^7.0.3",
     "dotenv": "^8.2.0",
+    "epact": "^0.0.3",
     "express": "^4.17.1",
     "express-fw": "^0.1.6",
     "express-fw-next": "^0.0.8",
     "helmet": "^4.4.1",
     "http-errors": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "tsup": "^5.12.8",
     "tsx": "^3.4.0"
