@@ -6,8 +6,11 @@ import TypesForRequestHandlerParams, {
 
 export default function createBoot(
   app: Express,
-  $boot: ReturnType<typeof boot>
+  $boot: ReturnType<typeof boot> | {
+    default?: ReturnType<typeof boot>
+  }
 ) {
+  $boot = ($boot as any).default ?? $boot
   if (typeof $boot !== "function") {
     return []; // no export
   }
