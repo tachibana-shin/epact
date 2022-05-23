@@ -1,6 +1,6 @@
 import { globbySync } from "globby";
 import { relative, join } from "path";
-import parsePrefixRouter from "../utils/parsePrefixRouter";
+import parsePathRoute from "../utils/parsePathRoute";
 import toVarName from "../utils/toVarName";
 
 export default function renderPage(
@@ -34,7 +34,7 @@ ${pages
   .map(({ name, filename }) => {
     return `app.use("/", createPage("${join(
       baseUrl,
-      parsePrefixRouter(filename)
+      parsePathRoute(filename)
     )}", ${name}).router);`;
   })
   .join("\n")}
