@@ -1,4 +1,4 @@
-import { router } from "express-fw-next/dist/core";
+import { router } from "epact";
 
 export default router<{
   // eslint-disable-next-line functional/prefer-readonly-type

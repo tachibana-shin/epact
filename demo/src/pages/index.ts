@@ -1,5 +1,5 @@
 import http from "boot/plugins"
-import { router } from "express-fw-next";
+import { router } from "epact";
 import { verify  } from "jsonwebtoken";
 
 export default router<{

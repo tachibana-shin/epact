@@ -1,4 +1,4 @@
-import { page } from "express-fw-next";
+import { page } from "epact";
 
 export default page({
   get(req, res) {
