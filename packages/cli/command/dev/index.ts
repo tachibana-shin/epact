@@ -157,7 +157,7 @@ function startApp(
     );
 
     runProcess.stderr
-      ?.pipe(createFilterNodeWarn(ESBuildWarn, nodeWarn))
+      ?.pipe(createFilterNodeWarn(!ESBuildWarn, !nodeWarn))
       .pipe(process.stderr);
 
     runProcess.on("message", (data) => {
