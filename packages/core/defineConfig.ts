@@ -2,11 +2,17 @@
 
 import { Format, Options } from "tsup";
 
+type BootOption = {
+  name: string;
+  isDev?: boolean;
+  isProd?: boolean;
+}
+
 export type DefineConfig = {
   baseUrl?: string;
   filename?: string;
   port?: number;
-  boot?: string[];
+  boot?: (string | BootOption)[];
   env?: {
     [name: string]: string;
   };

@@ -17,7 +17,7 @@ export default function renderFileApp(
 
   const code =
     renderApp() +
-    renderBoot(config.boot) +
+    renderBoot(config.boot, devMode) +
     (config.prePublic ? renderPublic(config, devMode, pathToDir) : "") +
     renderPage(config.router?.routes, config.baseUrl) +
     renderCatchError(devMode) +

@@ -1,4 +1,4 @@
-import { Express, Router } from "express";
+import { Express } from "express";
 
 import TypesForRequestHandlerParams, {
   RequestHandlerFlatParams,
@@ -6,16 +6,28 @@ import TypesForRequestHandlerParams, {
 
 export default function createBoot(
   app: Express,
-  $boot: ReturnType<typeof boot> | {
-    default?: ReturnType<typeof boot>
-  }
+  $boot:
+    | ReturnType<typeof boot>
+    | {
+        default?: ReturnType<typeof boot>;
+      }
 ) {
-  $boot = ($boot as any).default ?? $boot
+  $boot = ($boot as any).default ?? $boot;
   if (typeof $boot !== "function") {
     return []; // no export
   }
 
-  const plugins = $boot.length >= 3 ? $boot : $boot({ router: app });
+  if ($boot.length >= 2) {
+    return [$boot];
+  }
+
+  const plugins =
+    $boot.length >= 3
+      ? $boot
+      : $boot({
+          app,
+          routes: app.routes,
+        });
 
   if (Array.isArray(plugins)) {
     return plugins;
@@ -27,8 +39,8 @@ export default function createBoot(
 type BootCallback<
   Params extends Partial<Record<keyof TypesForRequestHandlerParams, unknown>>
 > = (app: {
-  // eslint-disable-next-line functional/prefer-readonly-type
-  router: Router;
+  app: Express;
+  routes: Record<string, any>;
 }) => RequestHandlerFlatParams<Params>;
 
 export function boot<
