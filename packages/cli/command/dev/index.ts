@@ -12,6 +12,7 @@ import loadExpressConfig from "../../utils/loadExpressConfig";
 import renderFileApp from "../build/renderFileApp";
 
 import getIPAddress from "./utils/networkIP";
+import createFilterNodeWarn from "./filterNodeWarn";
 
 function buildFileMain(
   config: Awaited<ReturnType<typeof loadExpressConfig>>,
@@ -57,12 +58,15 @@ function buildFileMain(
 
 // eslint-disable-next-line functional/no-let
 let noClearConsole = false;
-export default async function dev() {
+export default async function dev(options: {
+  nodeWarn: boolean;
+  esbuildTrace: boolean;
+}) {
   const cwd = process.cwd();
   const config = await loadExpressConfig();
 
   buildFileMain(config, false);
-  startApp(cwd, config.filename);
+  startApp(cwd, config.filename, options.esbuildTrace, options.nodeWarn);
 
   const pathExpressConfig = getFilepathExpressConfig();
 
@@ -122,10 +126,15 @@ function isDependencyPath(data: any): data is {
   return data && "type" in data && data.type === "dependency";
 }
 
-function startApp(cwd: string, filename?: string) {
+function startApp(
+  cwd: string,
+  filename: string = "main.ts",
+  ESBuildWarn: boolean,
+  nodeWarn: boolean
+) {
   // if (clear) process.stdout.write("\u001Bc");
 
-  const fileMain = join(cwd, `.express/${filename || "main.ts"}`);
+  const fileMain = join(cwd, `.express/${filename}`);
 
   // console.log(
   //   chalk.bgBlue("express:start") +
@@ -143,9 +152,13 @@ function startApp(cwd: string, filename?: string) {
       process.execPath,
       ["--loader", "esm-loader-fix", "--require", "cjs-loader-fix", fileMain],
       {
-        stdio: ["inherit", "inherit", "inherit", "ipc"],
+        stdio: ["inherit", "inherit", "pipe", "ipc"],
       }
     );
+
+    runProcess.stderr
+      ?.pipe(createFilterNodeWarn(ESBuildWarn, nodeWarn))
+      .pipe(process.stderr);
 
     runProcess.on("message", (data) => {
       // Collect run-time dependencies to watch

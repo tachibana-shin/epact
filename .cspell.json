@@ -12,6 +12,7 @@
     "dependabot",
     "editorconfig",
     "epac",
+    "esbuild",
     "esnext",
     "execa",
     "exponentiate",
@@ -25,7 +26,8 @@
     "transpiled",
     "typedoc",
     "untracked",
-    "virual"
+    "virual",
+    "Watashi"
   ],
   "flagWords": [],
   "ignorePaths": [

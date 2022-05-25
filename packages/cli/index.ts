@@ -88,9 +88,15 @@ program
 program
   .command("dev")
   .description("Start app in development debug")
-  .action(() => {
-    dev();
+  .option("--node-warn", "show node warning")
+  .option("--esbuild-trace", "show esbuild trace")
+  .action((options) => {
+    dev({
+      nodeWarn: options["node-warn"] ?? false,
+      esbuildTrace: options["esbuild-trace"] ?? false,
+    });
   });
+
 // program
 //   .command("upgrade")
 //   .description("Upgrade express-fw")
