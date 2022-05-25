@@ -9,7 +9,7 @@ export default function renderPublic(
 ) {
   const publicDir = cwd + "/public";
 
-  if (devMode) return `app.use(express.static("../public"))`;
+  if (devMode) return `app.use(express.static("${join(cwd, "public")}"))`;
 
   if (!existsSync(publicDir)) return "";
 
@@ -17,5 +17,5 @@ export default function renderPublic(
     recursive: true,
   });
 
-  return `app.use(express.static("./public"))`;
+  return `app.use(express.static(\`\$\{__dirname\}/public\`))`;
 }
