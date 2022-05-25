@@ -26,7 +26,8 @@ export default function renderFileApp(
         ? config.port ?? 3000
         : /* build mode */ forceSystemless
         ? false
-        : config.build?.port ?? config.port ?? 3000
+        : config.build?.port ?? config.port ?? 3000,
+        devMode
     ) +
     (config.prePublic ? "" : renderPublic(config, devMode, pathToDir)) +
     "\nexport default app;";

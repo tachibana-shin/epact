@@ -16,11 +16,28 @@ import page___src_pages_manga_chap__chap_ts from "../src/pages/manga/chap-_chap.
 import { createPage } from "epact";
 
 app.use("/", createPage("/", page___src_pages_index_ts).router);
-app.use("/", createPage("/:id/", page___src_pages__id_index_ts).router);
-app.use("/", createPage("/manga/chap-:chap", page___src_pages_manga_chap__chap_ts).router);
-
-app.listen(3000, () => {
-  console.log(`⚡App is running at port ${3000}`)
+app.use("/", createPage("/:id", page___src_pages__id_index_ts).router);
+app.use("/", createPage("/manga/chap-:chap?", page___src_pages_manga_chap__chap_ts).router);
+import { inspect } from "util"
+app.use((error, req, res, next) => {
+  res.end(`
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Server Error</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <code style="white-space: pre">${inspect(error)}</code>
+  </body>
+</html>
+`)
+  next()
 })
-  
+const timeStart = Date.now()
+app.listen(3000, () => {
+  console.log(`[90m⚡App is running at port ${3000} ready in ${Math.ceil(Date.now() - timeStart)}ms[39m`)
+})
+app.use(express.static("/workspace/express-fw/demo/public"))
 export default app;
