@@ -63,7 +63,7 @@ export default async function dev(options: {
   esbuildTrace: boolean;
 }) {
   const cwd = process.cwd();
-  const config = await loadExpressConfig();
+  let config = await loadExpressConfig();
 
   buildFileMain(config, false);
   startApp(cwd, config.filename, options.esbuildTrace, options.nodeWarn);
@@ -74,7 +74,7 @@ export default async function dev(options: {
     awaitWriteFinish: {
       stabilityThreshold: 500,
     },
-  }).on("change", (path) => {
+  }).on("change", async (path) => {
     process.stdout.write("\u001Bc");
     console.log(
       chalk.green(
@@ -85,6 +85,7 @@ export default async function dev(options: {
 ╚════════════════════════════════════════════╝`
       )
     );
+    config = await loadExpressConfig();
     noClearConsole = true;
     buildFileMain(config, true);
 
