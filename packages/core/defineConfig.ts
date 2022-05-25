@@ -20,6 +20,7 @@ export type DefineConfig = {
       replacement: string;
     }[];
   };
+  prePublic?: boolean;
 
   build?: {
     port?: string | number | false;

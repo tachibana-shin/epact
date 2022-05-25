@@ -17,6 +17,7 @@ export default function renderFileApp(
   const code =
     renderApp() +
     renderBoot(config.boot) +
+    (config.prePublic ? renderPublic(config, devMode, pathToDir) : "") +
     renderPage(config.router?.routes, config.baseUrl) +
     renderListenApp(
       devMode
@@ -25,7 +26,7 @@ export default function renderFileApp(
         ? false
         : config.build?.port ?? config.port ?? 3000
     ) +
-    renderPublic(config, devMode, pathToDir) +
+    (config.prePublic ? "" : renderPublic(config, devMode, pathToDir)) +
     "\nexport default app;";
 
   if (!existsSync(join(pathToDir, ".express"))) {
