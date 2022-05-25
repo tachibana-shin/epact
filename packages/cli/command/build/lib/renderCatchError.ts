@@ -1,4 +1,3 @@
-import { existsSync } from "fs";
 import JoyCon from "joycon";
 import { resolve } from "path";
 
@@ -17,14 +16,17 @@ const joy = new JoyCon({
 });
 
 export default function renderCatchError(isDev: boolean) {
-  const cwd = process.cwd()
+  const cwd = process.cwd();
   const fileCatchError = joy.resolveSync(joy.options.files, cwd);
 
   if (fileCatchError) {
-    return `import plugins__catch_error from "../${resolve(cwd, fileCatchError)}"
+    return `import plugins__catch_error from "../${resolve(
+      cwd,
+      fileCatchError
+    )}"
 
 app.use(plugins__catch_error)
-`
+`;
   }
 
   if (isDev) {
@@ -44,10 +46,10 @@ app.use((error, req, res, next) => {
 </html>
 \`)
   next()
-})`
+})`;
   }
 
   return `app.use((error, req, res, next) => {
   next()
-})`
+})`;
 }

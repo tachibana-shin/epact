@@ -36,12 +36,13 @@ export default function createBoot(
   }
 }
 
+type IOrArray<T> = T | T[];
 type BootCallback<
   Params extends Partial<Record<keyof TypesForRequestHandlerParams, unknown>>
 > = (app: {
   app: Express;
   routes: Record<string, any>;
-}) => RequestHandlerFlatParams<Params>;
+}) => IOrArray<RequestHandlerFlatParams<Params>> | void;
 
 export function boot<
   Params extends Partial<Record<keyof TypesForRequestHandlerParams, unknown>>
