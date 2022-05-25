@@ -1,6 +1,6 @@
 import { existsSync } from "fs";
 import { DefineConfig } from "../../../../core";
-import { copySync } from "fs-extra";
+import fs from "fs-extra";
 import { join } from "path";
 export default function renderPublic(
   config: DefineConfig,
@@ -13,7 +13,7 @@ export default function renderPublic(
 
   if (!existsSync(publicDir)) return "";
 
-  copySync(publicDir, join(cwd, config.build?.outDir || "dist", "public"), {
+  fs.copySync(publicDir, join(cwd, config.build?.outDir || "dist", "public"), {
     recursive: true,
   });
 

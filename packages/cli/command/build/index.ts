@@ -17,7 +17,7 @@ export default async function (
   const config = await loadExpressConfig();
 
   renderFileApp(config, false, options.systemless || undefined);
-  
+
   build({
     entry: [join(pathToDir, ".express/main.ts")],
     splitting: true,
