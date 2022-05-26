@@ -3,6 +3,7 @@ import { program } from "commander";
 
 import build from "./command/build";
 import dev from "./command/dev";
+import test from "./command/test";
 // import upgrade from "./command/upgrade";
 
 program
@@ -96,7 +97,12 @@ program
       esbuildTrace: options["esbuild-trace"] ?? false,
     });
   });
-
+program
+  .command("test <test_runner...>")
+  .description("start test")
+  .action((shell) => {
+    test(shell.join(" "));
+  });
 // program
 //   .command("upgrade")
 //   .description("Upgrade express-fw")
