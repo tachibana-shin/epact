@@ -15,7 +15,13 @@ export default function renderPage(
     filename: string;
   }[] = [];
   return (
-    globbySync(["src/pages/**/*.ts", "!*/\\!*/*"])
+    globbySync([
+      "src/pages/**/*.ts",
+      "!*/\\!*/*",
+      "!*/**/*.test.*",
+      "!*/**/*.spec.*",
+      "!*/__test__/*",
+    ])
       .map((filename) => {
         const finder = relative("src/pages", filename);
 
