@@ -15,7 +15,8 @@
       ],
       "boot/*": [
         "./src/boot/*"
-      ]
+      ],
+      "epact:app": ["./.express/main.ts"]
     }
   },
   "include": [
