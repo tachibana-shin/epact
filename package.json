@@ -2,7 +2,7 @@
   "name": "epact",
   "description": "A simple wrapper for expressa simple wrapper for express",
   "author": "Tachibana Shin",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "./dist/core/index.js",
   "exports": {
     ".": {
@@ -26,8 +26,8 @@
   "keywords": [],
   "scripts": {
     "build": "tsup-node",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vitest run --dir packages/",
+    "test:watch": "vitest --dir packages/",
     "test:coverage": "vitest run --coverage",
     "prepublishOnly": "pnpm test && pnpm build",
     "test:ts": "tsc --noEmit"
