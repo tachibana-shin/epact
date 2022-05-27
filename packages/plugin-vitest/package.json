@@ -1,0 +1,48 @@
+{
+  "name": "@epact/plugin-vitest",
+  "description": "Plugin tester epact for vitest",
+  "author": "Tachibana Shin",
+  "version": "0.0.7-alpha2",
+  "main": "./dist/index.js",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tachibana-shin/epact.git"
+  },
+  "license": "MIT",
+  "keywords": [],
+  "scripts": {
+    "build": "tsup-node",
+    "prepublishOnly": "pnpm build"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "dependencies": {
+    "vitest-tsconfig-paths": "^3.4.1"
+  },
+  "devDependencies": {
+    "tsup": "^6.0.1",
+    "vite": "^2.9.9",
+    "vitest": "^0.12.9"
+  },
+  "bugs": {
+    "url": "https://github.com/tachibana-shin/epact/issues"
+  },
+  "homepage": "https://github.com/tachibana-shin/epact#readme"
+}
