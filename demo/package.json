@@ -7,7 +7,7 @@
     "start": "yarn build && node ./dist/index.js",
     "dev": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs dev",
     "build": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs build",
-    "test": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs test vitest run --coverage",
+    "test": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs test vitest",
     "lint": "eslint --fix"
   },
   "author": "tachibana-shin <thanhnguyennguyen1995@gmail.com>",
@@ -19,7 +19,7 @@
     "cookie-parser": "^1.4.5",
     "cross-spawn": "^7.0.3",
     "dotenv": "^8.2.0",
-    "epact": "^0.0.3",
+    "epact": "link:../",
     "express": "^4.17.1",
     "express-fw": "^0.1.6",
     "express-fw-next": "^0.0.8",
