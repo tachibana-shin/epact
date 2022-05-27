@@ -99,9 +99,11 @@ program
   });
 program
   .command("test <test_runner...>")
-  .description("start test")
+  .allowUnknownOption(true)
+  .allowExcessArguments(true)
+  .description("start test with <test_runner>")
   .action((shell) => {
-    test(shell.join(" "));
+    test(shell);
   });
 // program
 //   .command("upgrade")

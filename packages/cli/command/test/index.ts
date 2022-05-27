@@ -12,13 +12,17 @@ function buildFileMain(config: Awaited<ReturnType<typeof loadExpressConfig>>) {
   renderFileApp(config, true);
 }
 
-export default async function test(shellScript: string) {
+export default async function test(shellScript: string[]) {
   const cwd = process.cwd();
   let config = await loadExpressConfig();
 
   buildFileMain(config);
-  spawn("npx", [shellScript], {
+  const processTester = spawn("npx", shellScript, {
     stdio: "inherit",
+  });
+
+  processTester.on("exit", (code) => {
+    process.exit(code ?? void 0);
   });
 
   const pathExpressConfig = getFilepathExpressConfig();
