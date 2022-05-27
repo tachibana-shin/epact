@@ -2,8 +2,10 @@ lockfileVersion: 5.4
 
 specifiers:
   '@types/express': ^4.17.13
+  '@types/express-serve-static-core': ^4.17.28
   '@types/fs-extra': ^9.0.13
   '@types/node': ^17.0.35
+  '@types/qs': ^6.9.7
   '@typescript-eslint/eslint-plugin': ^5.26.0
   '@typescript-eslint/parser': ^5.26.0
   chalk: ^5.0.1
@@ -43,8 +45,10 @@ dependencies:
 
 devDependencies:
   '@types/express': 4.17.13
+  '@types/express-serve-static-core': 4.17.28
   '@types/fs-extra': 9.0.13
   '@types/node': 17.0.35
+  '@types/qs': 6.9.7
   '@typescript-eslint/eslint-plugin': 5.26.0_hzuh7e2up357pvq3mkokjvu2lq
   '@typescript-eslint/parser': 5.26.0_xztl6dhthcahlo6akmb2bmjmle
   cspell: 6.0.0
