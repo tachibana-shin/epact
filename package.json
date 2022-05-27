@@ -17,7 +17,7 @@
     "build:epact": "pnpm -dir packages/epact build",
     "build:cli": "pnpm -dir packages/cli build",
     "build:plugin-vitest": "pnpm -dir packages/plugin-vitest build",
-    "build": "pnpm build:epact && pnpm build:cli && pnpm:plugin-vitest",
+    "build": "pnpm build:epact && pnpm build:cli && pnpm build:plugin-vitest",
     "dev": "pnpm -r --parallel --filter=./packages/** run dev",
     "lint": "eslint packages/. --ext=.ts",
     "lint:fix": "pnpm lint --fix",

@@ -1,8 +1,13 @@
-import type { DefineConfig } from "../../../../../epact"
 import toVarName from "../utils/toVarName"
 
+interface BootOption {
+  name: string
+  isDev?: boolean
+  isProd?: boolean
+}
+
 export default function renderBoot(
-  boot: DefineConfig["boot"] = void 0,
+  boot: (BootOption | string)[] = void 0,
   isDev: boolean
 ) {
   // load boots;
