@@ -2,7 +2,7 @@
   "name": "@epact/core",
   "description": "A simple wrapper for expressa simple wrapper for express",
   "author": "Tachibana Shin",
-  "version": "0.0.7-alpha2",
+  "version": "0.0.7",
   "main": "./dist/core/index.js",
   "husky": {
     "hooks": {
@@ -22,7 +22,7 @@
     "lint": "eslint packages/. --ext=.ts",
     "lint:fix": "pnpm lint --fix",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "release": "bumpp package.json packages/*/package.json --commit --push --tag && pnpm -r publish --access public",
+    "release": "pnpm push && bumpp package.json packages/*/package.json --commit --push --tag && pnpm -r publish --access public",
     "test": "pnpm -r --stream run test",
     "typecheck": "tsc --noEmit",
     "push": "pnpm lint && pnpm test && pnpm changelog && pnpm build"
