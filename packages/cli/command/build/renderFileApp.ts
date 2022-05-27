@@ -22,12 +22,12 @@ export default function renderFileApp(
     renderPage(config.router?.routes, config.baseUrl) +
     renderCatchError(devMode) +
     renderListenApp(
-      devMode
-        ? config.port ?? 3000
-        : /* build mode */ forceSystemless
+      forceSystemless
         ? false
+        : devMode
+        ? config.port ?? 3000
         : config.build?.port ?? config.port ?? 3000,
-        devMode
+      devMode
     ) +
     (config.prePublic ? "" : renderPublic(config, devMode, pathToDir)) +
     "\nexport default app;";
