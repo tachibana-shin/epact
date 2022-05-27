@@ -7,7 +7,7 @@
     "start": "yarn build && node ./dist/index.js",
     "dev": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs dev",
     "build": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs build",
-    "test": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs test vitest",
+    "test": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs test vitest run --coverage",
     "lint": "eslint --fix"
   },
   "author": "tachibana-shin <thanhnguyennguyen1995@gmail.com>",
@@ -41,6 +41,7 @@
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
+    "c8": "^7.11.3",
     "chalk": "^5.0.1",
     "esbuild": "^0.14.39",
     "esbuild-node-tsc": "^1.7.0",

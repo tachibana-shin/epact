@@ -18,9 +18,8 @@ export default router<{
   };
 }>({
   get(req, res) {
-    console.log(http);
     res.json({
-      message: "Hello express",
+      message: "Hello express!",
     });
   },
 });

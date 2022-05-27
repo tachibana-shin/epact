@@ -35,9 +35,11 @@ app.use((error, req, res, next) => {
 `)
   next()
 })
-const timeStart = Date.now()
-app.listen(3000, () => {
-  console.log(`[90m⚡App is running at port ${3000} ready in ${Math.ceil(Date.now() - timeStart)}ms[39m`)
-})
-app.use(express.static("/workspace/express-fw/demo/public"))
+if (process.env.NODE_ENV?.toLowerCase() !== "test" && process.ev.MODE !== "test" && process.env.TEST !== "true") {
+  const timeStart = Date.now()
+  app.listen(3000, () => {
+    console.log(`[90m⚡App is running at port ${3000} ready in ${Math.ceil(Date.now() - timeStart)}ms[39m`)
+  })
+}
+app.use(express.static("/workspace/epact/demo/public"))
 export default app;

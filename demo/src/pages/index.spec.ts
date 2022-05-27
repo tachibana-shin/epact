@@ -6,6 +6,7 @@ it("GET /", async function (): Promise<void> {
   const res = await request(app).get("/");
 
   expect(res.body).toEqual({
-    message: "Hello express",
+    message: "Hello express!",
   });
 });
+
