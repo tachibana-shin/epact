@@ -25,15 +25,15 @@ function buildFileMain(
   if (!isUpdated) {
     process.stdout.write(
       chalk.cyan(`  EPACT v${VERSION}`) +
-        chalk.green(" app Express running at:\n")
+        chalk.green(" app Express running at:\n\n")
     )
 
     process.stdout.write(
       `    > Local: ${chalk.cyan(
         `http://localhost:${config.port ?? 3000}`
-      )}\n` +
+      )}\n\n` +
         `    > Network: ${chalk.cyan(
-          `http://${getIPAddress()}:${config.port ?? 3000}`
+          `http://${getIPAddress()}:${config.port ?? 3000}\n`
         )}`
     )
   }

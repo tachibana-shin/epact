@@ -9,7 +9,7 @@ export default function renderListenApp(
 
   if (isDev) {
     return `
-if (process.env.NODE_ENV?.toLowerCase() !== "test" && process.ev.MODE !== "test" && process.env.TEST !== "true") {
+if (process.env.NODE_ENV?.toLowerCase() !== "test" && process.env.MODE !== "test" && process.env.TEST !== "true") {
   const timeStart = Date.now()
   app.listen(${port}, () => {
     console.log(\`${chalk[isDev ? "grey" : "cyanBright"](
