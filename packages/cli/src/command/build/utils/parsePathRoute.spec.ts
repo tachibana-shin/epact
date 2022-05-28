@@ -50,3 +50,17 @@ describe("test _", () => {
     })
   })
 })
+
+describe("test RegExp", () => {
+  describe.each([
+    ["manga/_id/chap-_chap(%d+)", "/manga/:id/chap-:chap(\\d+)?"],
+    ["manga/_id/chap-_chap(%d+)!", "/manga/:id/chap-:chap(\\d+)"],
+    // char @
+    ["manga/_id/chap-_chap(@d+)", "/manga/:id/chap-:chap(\\d+)?"],
+    ["manga/_id/chap-_chap(@d+)!", "/manga/:id/chap-:chap(\\d+)"]
+  ])("test parse('%s')", (source, result) => {
+    test(`equal is ${result}`, () => {
+      expect(parsePathRoute(source)).toBe(result)
+    })
+  })
+})

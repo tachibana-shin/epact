@@ -12,6 +12,9 @@ function removeExt(name: string): string {
 function parseStarRoute(name: string): string {
   return name.replace(/(?:\/|^)_(?:\/|$)/g, "(?:/*)?")
 }
+function parsePerToSlash(name: string): string {
+  return name.replace(/\%|\@/g, "\\")
+}
 
 interface ParsePathRouteOption {
   readonly strict?: boolean
@@ -21,7 +24,7 @@ export default function parsePrefixRouter(
   name: string,
   options?: ParsePathRouteOption
 ): string {
-  name = removeExt(normalize(name))
+  name = parsePerToSlash(removeExt(normalize(name)))
 
   const important: boolean = rFlagImportant.test(name)
   if (
