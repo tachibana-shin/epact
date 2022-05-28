@@ -8,6 +8,8 @@ describe("test normal", () => {
     ["foo/bar/index", "/foo/bar"],
     ["foo/_bar/index", "/foo/:bar"],
     ["foo/_bar", "/foo/:bar?"],
+    ["foo/_bar!.ts", "/foo/:bar"],
+    ["foo/_bar/index!", "/foo/:bar/index"],
     ["manga/chap-_chap", "/manga/chap-:chap?"],
     ["manga/_id/chap-_chap", "/manga/:id/chap-:chap?"]
   ])("test parse('%s')", (source, result) => {
@@ -22,6 +24,8 @@ describe("test strict mode", () => {
     ["foo/bar", "/foo/bar"],
     ["foo/bar/index", "/foo/bar"],
     ["foo/_bar", "/foo/:bar"],
+    ["foo/_bar!.ts", "/foo/:bar"],
+    ["foo/_bar/index!", "/foo/:bar/index"],
     ["manga/chap-_chap", "/manga/chap-:chap"],
     ["manga/_id/chap-_chap", "/manga/:id/chap-:chap"]
   ])("test parse('%s')", (source, result) => {

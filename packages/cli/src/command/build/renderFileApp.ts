@@ -21,7 +21,7 @@ export default function renderFileApp(
     renderApp() +
     renderBoot(config.boot, devMode) +
     (config.prePublic ? renderPublic(config, devMode, pathToDir) : "") +
-    renderPage(config.router?.routes, config.baseUrl) +
+    renderPage(config.router, config.baseUrl) +
     renderCatchError(devMode) +
     renderListenApp(
       forceSystemless

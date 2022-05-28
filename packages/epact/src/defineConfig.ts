@@ -19,6 +19,7 @@ export interface DefineConfig {
       find: string
       replacement: string
     }[]
+    strict?: boolean
   }
   prePublic?: boolean
 

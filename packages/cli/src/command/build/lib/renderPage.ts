@@ -4,12 +4,10 @@ import { globbySync } from "globby"
 
 import parsePathRoute from "../utils/parsePathRoute"
 import toVarName from "../utils/toVarName"
+import type { DefineConfig } from "../../../../../epact/src"
 
 export default function renderPage(
-  routes?: readonly {
-    readonly find: string
-    readonly replacement: string
-  }[],
+  { routes, strict }: DefineConfig["router"],
   baseUrl = "/"
 ) {
   const pages: {
@@ -41,7 +39,7 @@ ${pages
   .map(({ name, filename }) => {
     return `app.use("/", createPage("${join(
       baseUrl,
-      parsePathRoute(filename)
+      parsePathRoute(filename, { strict })
     )}", ${name}).router);`
   })
   .join("\n")}
