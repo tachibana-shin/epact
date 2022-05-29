@@ -21,7 +21,7 @@ export default async function (
   renderFileApp(config, false, options.systemless || undefined)
 
   build({
-    entry: [join(pathToDir, ".express/main.ts")],
+    entry: [join(pathToDir, `.express/${config.filename ?? "main.ts"}`)],
     splitting: true,
     clean: true,
     ...config.build,
