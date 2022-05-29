@@ -9,7 +9,8 @@ import test from "./command/test"
 // prettier-ignore
 program
   .command("build")
-  .description("build app EPACT build for systemless")
+  .description("command build app epact")
+  .option("-sl, --systemless", "build app EPACT build for systemless")
   .option(
     "-w, --watch [path]",
     // prettier-ignore
