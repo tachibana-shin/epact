@@ -7,9 +7,9 @@ import toVarName from "../utils/toVarName"
 import type { DefineConfig } from "../../../../../epact/src"
 
 export default function renderPage(
-  { routes, strict }: DefineConfig["router"],
+  { routes, strict }: DefineConfig["router"] = {},
   baseUrl = "/"
-) {
+): string {
   const pages: {
     readonly name: string
     readonly filename: string

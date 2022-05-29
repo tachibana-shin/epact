@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, writeFileSync } from "fs"
 import { join } from "path"
 
-import type { DefineConfig } from "../../../../epact"
+import type { DefineConfig } from "../../../../epact/src"
 
 import renderApp from "./lib/renderApp"
 import renderBoot from "./lib/renderBoot"
