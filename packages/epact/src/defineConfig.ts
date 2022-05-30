@@ -48,6 +48,7 @@ export interface DefineConfig {
     banner?: string | Record<string, string>
     footer?: string | Record<string, string>
     esbuildOptions?: Options["esbuildOptions"]
+    pkgFile?: boolean
   }
 }
 
