@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { RequestHandler } from "express"
-import type { ParamsDictionary } from "express-serve-static-core"
 import type { ParsedQs } from "qs"
 
 interface TypesForRequestHandlerParams {
-  params: ParamsDictionary
+  params: Record<string, string>
   resBody: any
   body: any
   query: ParsedQs
