@@ -5,7 +5,6 @@ export default {
   boot: ["dotenv", "plugins"],
   footer: "module.exports = app",
   build: {
-    format: ["cjs"],
     esbuildOptions: (options) => {
       options.footer = {
         // This will ensure we can continue writing this plugin
