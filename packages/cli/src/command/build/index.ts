@@ -8,15 +8,13 @@ import loadExpressConfig from "../../utils/loadExpressConfig"
 import renderFileApp from "./renderFileApp"
 
 function toAppend(
-  apper?: string | Record<string, string>,
-  format?: string[]
+  apper?: string | Record<string, string>
 ): Record<string, string> {
   if (!apper) return void 0
 
   if (typeof apper === "string") {
     return {
       js: apper,
-      [format?.includes("esm") ? "mjs" : "js"]: apper
     }
   }
 
@@ -72,7 +70,7 @@ export default async function (
       ? Array.isArray(config.build?.format)
         ? config.build.format
         : [config.build.format]
-      : [],
+      : ["cjs"],
     esbuildOptions(options, context) {
       if (banner) options.banner = banner
       if (footer) options.footer = footer
