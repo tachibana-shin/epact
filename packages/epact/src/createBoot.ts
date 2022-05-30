@@ -18,9 +18,9 @@ export default function createBoot(
     $boot.length >= 3
       ? $boot
       : $boot({
-          app,
-          routes: app.routes,
-        })
+        app,
+        routes: app.routes
+      })
 
   if (Array.isArray(plugins)) return plugins
   else return [plugins]

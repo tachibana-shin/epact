@@ -17,7 +17,9 @@ export default function createFilterNodeWarn(
     "ExperimentalWarning: Custom ESM Loaders is an experimental feature. This feature could change at any time",
     "ExperimentalWarning: Importing JSON modules is an experimental feature. This feature could change at any time"
   ]
+  // eslint-disable-next-line functional/no-let
   let filterStderr = true
+  // eslint-disable-next-line functional/no-let
   let counter = 0
 
   return new Transform({

@@ -55,12 +55,14 @@ function buildFileMain(
   }
 }
 
+// eslint-disable-next-line functional/no-let
 let noClearConsole = false
 export default async function dev(options: {
   readonly nodeWarn: boolean
   readonly esbuildTrace: boolean
 }) {
   const cwd = process.cwd()
+  // eslint-disable-next-line functional/no-let
   let config = await loadExpressConfig()
 
   buildFileMain(config, false)
@@ -110,11 +112,10 @@ export default async function dev(options: {
     },
     ignoreInitial: true
   })
-    // eslint-disable-next-line arrow-parens
     .on("add", (path) => onPageChange(path, "add"))
-    // eslint-disable-next-line arrow-parens
+
     .on("unlink", (path) => onPageChange(path, "deleted"))
-    // eslint-disable-next-line arrow-parens
+
     .on("unlinkDir", (path) => onPageChange(path, "deleted all"))
 }
 
@@ -141,6 +142,7 @@ function startApp(
   //     chalk.green(chalk.bold(` start app at port ${port}!`))
   // );
 
+  // eslint-disable-next-line functional/no-let
   let runProcess: ChildProcess | undefined
   function reRun() {
     if (runProcess && !runProcess.killed && runProcess.exitCode === null)
@@ -167,7 +169,7 @@ function startApp(
 
         if (!dependencyPath.startsWith("/")) return
         // process.stdout.write('adding', dependencyPath);
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-use-before-define
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         watcher!.add(dependencyPath)
       }
     })

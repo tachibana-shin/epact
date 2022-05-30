@@ -15,6 +15,7 @@ function buildFileMain(config: Awaited<ReturnType<typeof loadExpressConfig>>) {
 
 export default async function test(shellScript: readonly string[]) {
   const cwd = process.cwd()
+  // eslint-disable-next-line functional/no-let
   let config = await loadExpressConfig()
 
   buildFileMain(config)
@@ -23,6 +24,7 @@ export default async function test(shellScript: readonly string[]) {
   })
 
   processTester.on("exit", (code) => {
+    // eslint-disable-next-line n/no-process-exit, no-void
     process.exit(code ?? void 0)
   })
 
@@ -68,7 +70,7 @@ export default async function test(shellScript: readonly string[]) {
     },
     ignoreInitial: true
   })
-    // eslint-disable-next-line arrow-parens
+
     .on("add", (path) => onPageChange(path, "add"))
     .on("unlink", (path) => onPageChange(path, "deleted"))
     .on("unlinkDir", (path) => onPageChange(path, "deleted all"))

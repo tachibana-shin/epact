@@ -12,7 +12,7 @@ import renderFileApp from "./renderFileApp"
 
 function toAppend(
   apper?: string | Record<string, string>
-): Record<string, string> {
+): Record<string, string> | void {
   if (!apper) return void 0
 
   if (typeof apper === "string") {
@@ -88,7 +88,7 @@ export default async function (
       }
     }),
     config.build?.pkgFile ? buildFilePkgJSON(pathToDir) : void 0,
-    copyFilesInPublish(pathToDir),
+    copyFilesInPublish(pathToDir)
   ])
 }
 
@@ -108,7 +108,7 @@ async function copyFilesInPublish(cwd: string) {
   if (!existsSync(publish)) return
 
   await Promise.all(
-    readdirSync(publish).map(filename => {
+    readdirSync(publish).map((filename) => {
       return copy(join(publish, filename), join(cwd, "dist", filename))
     })
   )

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { readFileSync } from "fs"
 import { extname, relative } from "path"
 
@@ -6,9 +7,11 @@ import { highlight } from "cli-highlight"
 // TODO: ばんざいでそ！🙌
 
 class ErrorNoWatashi extends Error {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(name: string, message: string, stack: string, extend: any) {
     super(message)
 
+    // eslint-disable-next-line functional/no-let
     let syntaxError = ""
     if (message.startsWith("Transform failed with 1 error:")) {
       const { line, lineText, length, column, file } = extend.errors[0].location
@@ -136,11 +139,13 @@ function parseStringObject(str: string) {
     "globalThis",
     "self",
     `return ${str}`
+    // eslint-disable-next-line no-void
   ).call(void 0)
 }
 
 function filterESbuildTrace(trace: string, hidden: boolean): string {
   const newTraceArray: string[] = []
+  // eslint-disable-next-line functional/no-let
   let esbuildTraceNow = ""
 
   trace
@@ -150,6 +155,7 @@ function filterESbuildTrace(trace: string, hidden: boolean): string {
       const isESBuild = /esbuild\/lib\/main\.js:\d+:\d+\)?$/.test(lineAt)
 
       if (isESBuild) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const offsetError = lineAt.match(/(:\d+:\d+)\)?$/)![1]!.slice(1)
 
         if (!hidden) esbuildTraceNow += ` -> ${offsetError}`

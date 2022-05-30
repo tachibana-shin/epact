@@ -1,13 +1,3 @@
 {
-  "extends": "@antfu",
-  "rules": {
-    "@typescript-eslint/quotes": ["error", "double"],
-    "no-void": "off",
-    "@typescript-eslint/comma-dangle": "off",
-    "@typescript-eslint/brace-style": ["error", "1tbs"],
-    "operator-linebreak": "off",
-    "antfu/if-newline": "off",
-    "arrow-parens": "off",
-    "@typescript-eslint/indent": "off"
-  }
+  "extends": "@tachibana-shin/eslint-config"
 }

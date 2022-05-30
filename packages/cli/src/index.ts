@@ -1,4 +1,3 @@
-#!/bin/env node
 import { program } from "commander"
 
 import build from "./command/build"
@@ -63,14 +62,18 @@ program
   .option("--platform <platform>", "Target platform", "node")
   .option("-dg, --debug", "Enable mode debug. Build sourcemap and no minify")
   .action((options) => {
-    if (typeof options.format === "string")
+    if (typeof options.format === "string") {
+      // eslint-disable-next-line functional/immutable-data
       options.format = options.format.split(",").filter(Boolean)
+    }
 
     const env: Record<string, string> = {}
 
     for (const prop in options) {
-      if (prop.startsWith("env."))
+      if (prop.startsWith("env.")) {
+        // eslint-disable-next-line functional/immutable-data
         env[prop.slice(prop.indexOf("env.") + 4)] = options[prop]
+      }
     }
 
     build({

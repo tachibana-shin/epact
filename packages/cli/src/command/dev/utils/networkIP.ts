@@ -3,6 +3,7 @@ import { networkInterfaces } from "os"
 export default function getIPAddress() {
   for (const iface of Object.values(networkInterfaces())) {
     if (!iface) continue
+    // eslint-disable-next-line functional/no-let
     for (let i = 0; i < iface.length; i++) {
       const alias = iface[i]
       if (

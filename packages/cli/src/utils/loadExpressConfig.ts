@@ -3,8 +3,10 @@ import { relative } from "path"
 
 import { bundleRequire } from "bundle-require"
 import JoyCon from "joycon"
+
 import type { DefineConfig, defineConfig } from "../../../epact/src"
 
+// eslint-disable-next-line camelcase
 export const Filenames_Config = [
   "express.config.js",
   "express.config.ts",
@@ -29,10 +31,12 @@ function loadJSON(filepath: string) {
     return JSON.parse(readFileSync(filepath, "utf8"))
   } catch (error) {
     if (error instanceof Error) {
+      // eslint-disable-next-line functional/no-throw-statement
       throw new TypeError(
         `Failed to parse ${relative(process.cwd(), filepath)}: ${error.message}`
       )
     } else {
+      // eslint-disable-next-line functional/no-throw-statement
       throw error
     }
   }
@@ -42,7 +46,7 @@ export function getFilepathExpressConfig(): string | null {
 }
 export default async function loadExpressConfig(): Promise<
   ReturnType<typeof defineConfig>
-> {
+  > {
   const configPath = await joy.resolve(Filenames_Config, process.cwd())
 
   if (configPath === null) return CONFIG_DEFAULT

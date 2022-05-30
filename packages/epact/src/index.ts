@@ -11,5 +11,5 @@ export {
   boot,
   page,
   router,
-  DefineConfig,
+  DefineConfig
 }

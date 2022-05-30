@@ -3,6 +3,7 @@ import { Router } from "express"
 
 import alwayIsArray from "./utils/alwayIsArray"
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AllOfArray<T> = T extends any[] ? T : T[]
 type Middleware = AllOfArray<RequestHandler | ErrorRequestHandler>
 type Methods =
@@ -41,12 +42,14 @@ function loadMiddleware(list?: any) {
     Array.isArray(list)
   ) {
     list = {
-      all: list,
+      all: list
     }
   }
 
-  for (const method in list)
+  for (const method in list) {
+    // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
     list[method] = loadArrayMiddleware(list[method]) as any
+  }
 
   return list as Record<string, (RequestHandler | ErrorRequestHandler)[]>
 }
@@ -108,7 +111,7 @@ export default function createPage(
 
     return {
       prefix,
-      router: virualRouter,
+      router: virualRouter
     }
   }
 
@@ -133,7 +136,7 @@ export default function createPage(
 
   return {
     prefix,
-    router,
+    router
   }
 }
 
@@ -145,18 +148,20 @@ function page(
         middleware?:
           | TypeOrArray<RequestHandler>
           | {
+              // eslint-disable-next-line no-unused-vars
               [name in Methods]?: TypeOrArray<
                 ErrorRequestHandler | RequestHandler
               >
             }
       } & {
+        // eslint-disable-next-line no-unused-vars
         [name in Methods]?: TypeOrArray<RequestHandler>
       })
     | RequestHandler
 ) {
   if (typeof opts === "function") {
     return {
-      get: opts,
+      get: opts
     }
   }
 
