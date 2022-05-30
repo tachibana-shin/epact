@@ -1,8 +1,6 @@
 import type { ErrorRequestHandler, RequestHandler } from "express"
 import { Router } from "express"
 
-import type { RequestHandlerFlatParams } from "./type/TypesForRequestHandlerParams"
-import type TypesForRequestHandlerParams from "./type/TypesForRequestHandlerParams"
 import alwayIsArray from "./utils/alwayIsArray"
 
 type AllOfArray<T> = T extends any[] ? T : T[]
@@ -139,31 +137,22 @@ export default function createPage(
   }
 }
 
-type AllParamsDefault = {
-  [key in Methods]: Record<keyof TypesForRequestHandlerParams, unknown>
-}
+type TypeOrArray<T> = T | T[]
 
-type TorArray<T> = T | T[]
-function page<
-  ParamsCustom extends {
-    [key in Methods]?: Partial<
-      Record<keyof TypesForRequestHandlerParams, unknown>
-    >
-  },
-  Params extends AllParamsDefault & ParamsCustom = AllParamsDefault &
-    ParamsCustom
->(
+function page(
   opts:
     | ({
-        [name in Methods]?: TorArray<RequestHandlerFlatParams<Params[name]>>
-      } & {
         middleware?:
-          | TorArray<RequestHandler>
+          | TypeOrArray<RequestHandler>
           | {
-              [name in Methods]?: TorArray<RequestHandler>
+              [name in Methods]?: TypeOrArray<
+                ErrorRequestHandler | RequestHandler
+              >
             }
+      } & {
+        [name in Methods]?: TypeOrArray<RequestHandler>
       })
-    | RequestHandlerFlatParams<Params["get"]>
+    | RequestHandler
 ) {
   if (typeof opts === "function") {
     return {

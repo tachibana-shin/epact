@@ -1,7 +1,4 @@
-import type { Express } from "express"
-
-import type { RequestHandlerFlatParams } from "./type/TypesForRequestHandlerParams"
-import type TypesForRequestHandlerParams from "./type/TypesForRequestHandlerParams"
+import type { ErrorRequestHandler, Express, RequestHandler } from "express"
 
 export default function createBoot(
   app: Express,
@@ -30,16 +27,12 @@ export default function createBoot(
 }
 
 type IOrArray<T> = T | readonly T[]
-type BootCallback<
-  Params extends Partial<Record<keyof TypesForRequestHandlerParams, unknown>>
-> = (app: {
+type BootCallback = (app: {
   readonly app: Express
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly routes: Record<string, any>
-}) => IOrArray<RequestHandlerFlatParams<Params>> | void
+}) => IOrArray<ErrorRequestHandler | RequestHandler> | void
 
-export function boot<
-  Params extends Partial<Record<keyof TypesForRequestHandlerParams, unknown>>
->(callback: BootCallback<Params>): BootCallback<Params> {
+export function boot(callback: BootCallback): BootCallback {
   return callback
 }
