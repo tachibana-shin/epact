@@ -3,7 +3,7 @@ import { relative } from "path"
 
 import { bundleRequire } from "bundle-require"
 import JoyCon from "joycon"
-import type { DefineConfig, defineConfig } from "../../../epact"
+import type { DefineConfig, defineConfig } from "../../../epact/src"
 
 export const Filenames_Config = [
   "express.config.js",

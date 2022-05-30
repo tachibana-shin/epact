@@ -17,8 +17,8 @@ export default function renderFileApp(
 ) {
   const pathToDir = process.cwd()
 
-  const code = `${
-    renderApp() +
+  const code =
+    `${renderApp() +
     renderBoot(config.boot, devMode) +
     (config.prePublic ? renderPublic(config, devMode, pathToDir) : "") +
     renderPage(config.router, config.baseUrl) +
@@ -32,7 +32,8 @@ export default function renderFileApp(
       devMode
     ) +
     (config.prePublic ? "" : renderPublic(config, devMode, pathToDir))
-  }\nexport default app;`
+    }\n` +
+    `${config.footer || "export default app;"}`
 
   if (!existsSync(join(pathToDir, ".express")))
     mkdirSync(join(pathToDir, ".express"))

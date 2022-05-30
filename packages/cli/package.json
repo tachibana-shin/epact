@@ -37,7 +37,7 @@
     "chokidar": "^3.5.3",
     "cjs-loader-fix": "0.0.1",
     "cli-highlight": "^2.1.11",
-    "commander": "^9.2.0",
+    "commander": "^9.3.0",
     "esm-loader-fix": "^0.0.6",
     "fs-extra": "^10.1.0",
     "globby": "^13.1.1",
@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
-    "vitest": "^0.12.9"
+    "vitest": "^0.13.0"
   },
   "bugs": {
     "url": "https://github.com/tachibana-shin/epact/issues"

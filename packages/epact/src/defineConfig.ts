@@ -9,6 +9,7 @@ interface BootOption {
 export interface DefineConfig {
   baseUrl?: string
   filename?: string
+  footer?: string
   port?: number
   boot?: (string | BootOption)[]
   env?: Record<string, string>
@@ -44,6 +45,9 @@ export interface DefineConfig {
     noSplitting?: boolean
     silent?: boolean
     metafile?: boolean
+    banner?: string | Record<string, string>
+    footer?: string | Record<string, string>
+    esbuildOptions?: Options["esbuildOptions"]
   }
 }
 
