@@ -37,8 +37,8 @@ export default async function (
 
   renderFileApp(config, false, options.systemless || undefined)
 
-  const banner = toAppend(config.build.banner)
-  const footer = toAppend(config.build.footer)
+  const banner = toAppend(config.build?.banner)
+  const footer = toAppend(config.build?.footer)
 
   await Promise.all([
     build({
