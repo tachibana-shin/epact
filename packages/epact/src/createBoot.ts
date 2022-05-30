@@ -1,4 +1,4 @@
-import type { ErrorRequestHandler, Express, RequestHandler } from "express"
+import type { Express, RequestHandler } from "express"
 
 export default function createBoot(
   app: Express,
@@ -31,7 +31,7 @@ type BootCallback = (app: {
   readonly app: Express
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly routes: Record<string, any>
-}) => IOrArray<ErrorRequestHandler | RequestHandler> | void
+}) => IOrArray<RequestHandler> | void
 
 export function boot(callback: BootCallback): BootCallback {
   return callback
