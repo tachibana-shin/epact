@@ -96,7 +96,7 @@ async function buildFilePkgJSON(cwd: string) {
 
   await writeFile(
     join(cwd, "dist/package.json"),
-    JSON.stringify(dependencies, (k, v) => v, 2)
+    JSON.stringify({ dependencies }, (k, v) => v, 2)
   )
 }
 async function copyFilesInPublish(cwd: string) {
