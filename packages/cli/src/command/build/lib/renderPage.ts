@@ -7,7 +7,7 @@ import toVarName from "../utils/toVarName"
 import type { DefineConfig } from "../../../../../epact/src"
 
 export default function renderPage(
-  { routes, strict }: DefineConfig["router"] = {},
+  { routes, strict, bracket }: DefineConfig["router"] = {},
   baseUrl = "/"
 ): string {
   const pages: {
@@ -39,7 +39,7 @@ ${pages
   .map(({ name, filename }) => {
     return `app.use("/", createPage("${join(
       baseUrl,
-      parsePathRoute(filename, { strict })
+      parsePathRoute(filename, { strict , bracket })
     )}", ${name}).router);`
   })
   .join("\n")}

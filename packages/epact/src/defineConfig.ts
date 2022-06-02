@@ -21,6 +21,7 @@ export interface DefineConfig {
       replacement: string
     }[]
     strict?: boolean
+    bracket?: boolean
   }
   prePublic?: boolean
 

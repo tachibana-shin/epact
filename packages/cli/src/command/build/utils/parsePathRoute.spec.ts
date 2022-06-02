@@ -64,3 +64,22 @@ describe("test RegExp", () => {
     })
   })
 })
+
+describe("mode bracket", () => {
+  describe.each([
+    ["foo/bar", "/foo/bar"],
+    ["foo/bar/index", "/foo/bar"],
+    ["foo/[bar]/index", "/foo/:bar"],
+    ["foo/[bar]", "/foo/:bar"],
+    ["foo/[[bar]]", "/foo/:bar?"],
+    ["manga/chap-[[chap]]", "/manga/chap-:chap?"],
+    ["manga/[id]/chap-[chap]", "/manga/:id/chap-:chap"],
+    ["manga/[[id]]/chap-[chap]", "/manga/:id?/chap-:chap"]
+  ])("test parse('%s')", (source, result) => {
+    test(`equal is ${result}`, () => {
+      expect(parsePathRoute(source, {
+        bracket: true
+      })).toBe(result)
+    })
+  })
+})
