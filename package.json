@@ -2,7 +2,7 @@
   "name": "@epact/core",
   "description": "A simple wrapper for expressa simple wrapper for express",
   "author": "Tachibana Shin",
-  "version": "0.0.9-beta.21",
+  "version": "0.0.9-beta.22",
   "private": true,
   "husky": {
     "hooks": {
