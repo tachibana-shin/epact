@@ -39,7 +39,7 @@
   "devDependencies": {
     "tsup": "^6.0.1",
     "vite": "^2.9.9",
-    "vitest": "^0.12.9"
+    "vitest": "^0.13.1"
   },
   "bugs": {
     "url": "https://github.com/tachibana-shin/epact/issues"

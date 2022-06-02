@@ -35,10 +35,10 @@
     "bundle-require": "^3.0.4",
     "chalk": "^5.0.1",
     "chokidar": "^3.5.3",
-    "cjs-loader-fix": "0.0.1",
+    "cjs-loader-fix": "0.0.2",
     "cli-highlight": "^2.1.11",
     "commander": "^9.3.0",
-    "esm-loader-fix": "^0.0.6",
+    "esm-loader-fix": "^0.0.7",
     "fs-extra": "^10.1.0",
     "globby": "^13.1.1",
     "joycon": "^3.1.1",
@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
-    "vitest": "^0.13.0"
+    "vitest": "^0.13.1"
   },
   "bugs": {
     "url": "https://github.com/tachibana-shin/epact/issues"
