@@ -43,7 +43,6 @@ app.use((error, req, res, next) => {
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    // eslint-disable-next-line no-useless-escape
     <code style="white-space: pre">\$\{inspect(error)\}</code>
   </body>
 </html>
