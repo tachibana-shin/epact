@@ -131,16 +131,22 @@ export default function parseError(
 }
 
 function parseStringObject(str: string) {
-  // eslint-disable-next-line no-useless-call, no-new-func
-  return new Function(
-    "window",
-    "document",
-    "global",
-    "globalThis",
-    "self",
-    `return ${str}`
-    // eslint-disable-next-line no-void
-  ).call(void 0)
+  try {
+    // eslint-disable-next-line no-useless-call, no-new-func
+    return new Function(
+      "window",
+      "document",
+      "global",
+      "globalThis",
+      "self",
+      `return ${str}`
+      // eslint-disable-next-line no-void
+    ).call(void 0)
+  } catch {
+    return {
+      message: str
+    }
+  }
 }
 
 function filterESbuildTrace(trace: string, hidden: boolean): string {
