@@ -131,6 +131,14 @@ export default function parseError(
 }
 
 function parseStringObject(str: string) {
+  str = str
+    .replace(/\[Function \w+\]/g, (search) => {
+      return chalk.blue(search)
+    })
+    .replace(/warnings: \[\]/g, "warnings: []")
+    .trim()
+    .replace(/Node\.js v[\d.]+$/, "")
+
   try {
     // eslint-disable-next-line no-useless-call, no-new-func
     return new Function(
