@@ -14,7 +14,7 @@ class ErrorNoWatashi extends Error {
     // eslint-disable-next-line functional/no-let
     let syntaxError = ""
     if (message.startsWith("Transform failed with 1 error:")) {
-      const { line, lineText, length, column, file } = extend.errors[0].location
+      const { line, length, column, file } = extend.errors[0].location
 
       if (length > 0) {
         syntaxError = chalk.grey(`Error: ${file}:${line}:${column}:\n`)
@@ -27,12 +27,12 @@ class ErrorNoWatashi extends Error {
             language: extname(file).replace(/^\./, ""),
             ignoreIllegals: true
           })
-          .split("\n")
-          .map((lineText, i) => {
-            const indexLine = line -2 - i
-            return `${chalk.grey(indexLine)} ${" ".repeat(sizeWidthNumberLine - indexLine.toString().length)}| ${lineText}`
-          })
-          .join("\n")
+            .split("\n")
+            .map((lineText, i) => {
+              const indexLine = line - 2 - i
+              return `${chalk.grey(indexLine)} ${" ".repeat(sizeWidthNumberLine - indexLine.toString().length)}| ${lineText}`
+            })
+            .join("\n")
         ) + "\n"
 
         syntaxError += `${" ".repeat(sizeWidthNumberLine + 1)}|${" ".repeat(

@@ -11,7 +11,7 @@ type BootCallback =
         routes: Record<string, any>
       }): OrPromise<void> | IOrArray<RequestHandler>
     }
-    
+
 function bootIsRequestHandler(boot: BootCallback): boot is RequestHandler {
   return boot.length >= 2
 }
@@ -23,7 +23,7 @@ export default function createBoot(
   if (!bootFunction || typeof bootFunction === "object") return [] // no export
 
   if (bootIsRequestHandler(bootFunction)) return [bootFunction]
-  
+
   const bootReturn = bootFunction({ app, routes: app.routes })
 
   if (!bootReturn || "then" in bootReturn) return []
