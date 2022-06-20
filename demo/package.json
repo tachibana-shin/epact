@@ -5,7 +5,7 @@
   "main": "./src/main.ts",
   "scripts": {
     "start": "yarn build && node ./dist/index.js",
-    "dev": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs dev",
+    "dev": "cd .. && pnpm build && cd demo && node ../packages/cli/dist/index.mjs dev",
     "build": "cd .. && pnpm build && cd demo && node ../packages/cli/dist/index.mjs build",
     "test": "cd .. && pnpm build && cd demo && node ../dist/cli/index.mjs test vitest",
     "lint": "eslint --fix"

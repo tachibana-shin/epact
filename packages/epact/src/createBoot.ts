@@ -9,35 +9,26 @@ type BootCallback =
         app: Express
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         routes: Record<string, any>
-      }): OrPromise<IOrArray<RequestHandler> | void>
+      }): OrPromise<void> | IOrArray<RequestHandler>
     }
-type OrExportDefault<T> =
-  | T
-  | {
-      default?: T
-    }
-
+    
 function bootIsRequestHandler(boot: BootCallback): boot is RequestHandler {
   return boot.length >= 2
 }
 
-export default async function createBoot(
+export default function createBoot(
   app: Express,
-  $boot?: OrExportDefault<ReturnType<typeof boot>>
-): Promise<Array<RequestHandler>> {
-  if (!$boot) return []
-
-  const bootFunction = typeof $boot === "function" ? $boot : $boot.default
-
-  if (!bootFunction) return [] // no export
+  bootFunction?: ReturnType<typeof boot> | object
+): Array<RequestHandler> {
+  if (!bootFunction || typeof bootFunction === "object") return [] // no export
 
   if (bootIsRequestHandler(bootFunction)) return [bootFunction]
+  
+  const bootReturn = bootFunction({ app, routes: app.routes })
 
-  const bootReturn = await bootFunction({ app, routes: app.routes })
+  if (!bootReturn || "then" in bootReturn) return []
 
   if (Array.isArray(bootReturn)) return bootReturn
-
-  if (!bootReturn) return []
 
   return [bootReturn]
 }

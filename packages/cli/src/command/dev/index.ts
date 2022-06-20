@@ -150,7 +150,7 @@ function startApp(
 
     runProcess = spawn(
       process.execPath,
-      ["--loader", "esm-loader-fix", "--require", "cjs-loader-fix", fileMain],
+      ["--loader", "@esbuild-kit/esm-loader", "--require", "@esbuild-kit/cjs-loader", fileMain],
       {
         stdio: ["inherit", "inherit", "pipe", "ipc"]
       }

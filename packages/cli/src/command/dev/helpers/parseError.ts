@@ -17,28 +17,32 @@ class ErrorNoWatashi extends Error {
       const { line, lineText, length, column, file } = extend.errors[0].location
 
       if (length > 0) {
-        syntaxError += chalk.grey(`Error: ${file}:${line}:${column}:\n`)
+        syntaxError = chalk.grey(`Error: ${file}:${line}:${column}:\n`)
 
-        const linesCode = readFileSync(file, "utf8").split("\n")
+        const linesCode = readFileSync(file, "utf8").split("\n", line)
 
-        process.stdout.write(
-          highlight(linesCode.slice(Math.max(line - 2, 0), line).join("\n"), {
+        const sizeWidthNumberLine = line.toString().length
+        syntaxError += (
+          highlight(linesCode.slice(Math.max(line - 1 - 2, 0), line).join("\n"), {
             language: extname(file).replace(/^\./, ""),
             ignoreIllegals: true
           })
-        )
+          .split("\n")
+          .map((lineText, i) => {
+            const indexLine = line -2 - i
+            return `${chalk.grey(indexLine)} ${" ".repeat(sizeWidthNumberLine - indexLine.toString().length)}| ${lineText}`
+          })
+          .join("\n")
+        ) + "\n"
 
-        syntaxError += `${chalk.grey(line)} | ${highlight(lineText, {
-          language: extname(file).replace(/^\./, ""),
-          ignoreIllegals: true
-        })}\n${" ".repeat(line.toString().length + 1)}|${" ".repeat(
-          column
+        syntaxError += `${" ".repeat(sizeWidthNumberLine + 1)}|${" ".repeat(
+          column + 1
         )}${"^".repeat(length)}\n`
 
         const errorInfo = message.split("\n")[1]
         const syntax = errorInfo.slice(errorInfo.indexOf("ERROR:") + 7)
 
-        const offsetCenter = column + line.toString().length + 2
+        const offsetCenter = column + sizeWidthNumberLine + 2
         syntaxError += chalk.red(
           `${" ".repeat(
             Math.max(0, offsetCenter - Math.ceil(syntax.length / 2) - 1)

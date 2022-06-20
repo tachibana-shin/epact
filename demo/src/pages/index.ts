@@ -20,7 +20,7 @@ export default router<{
   get(req, res) {
     res.json({
       message: "Hello express!",
+      user: req.user
     });
-  },
-});
-
+  }
+})
