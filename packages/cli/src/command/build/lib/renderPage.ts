@@ -30,7 +30,7 @@ export default function renderPage(
 
       const name = `page__${toVarName(join(baseUrl, filename))}`
       pages.push({ name, filename: replacer })
-      return `import ${name} from "../${filename}";`
+      return `import ${name} from "../${filename.replace(/\.(t|j)s$/g, "")}";`
     })
     .join("\n")}
 import { createPage } from "epact";
@@ -39,7 +39,7 @@ ${pages
   .map(({ name, filename }) => {
     return `app.use("/", createPage("${join(
       baseUrl,
-      parsePathRoute(filename, { strict , bracket })
+      parsePathRoute(filename, { strict, bracket })
     )}", ${name}).router);`
   })
   .join("\n")}

@@ -1,37 +1,46 @@
 import type { Express, RequestHandler } from "express"
 
-export default function createBoot(
-  app: Express,
-  $boot:
-    | ReturnType<typeof boot>
-    | {
-        readonly default?: ReturnType<typeof boot>
-      }
-) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  $boot = ($boot as any).default ?? $boot
-  if (typeof $boot !== "function") return [] // no export
+type IOrArray<T> = T | T[]
+type OrPromise<T> = Promise<T> | T
+type BootCallback =
+  | RequestHandler
+  | {
+      (app: {
+        app: Express
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        routes: Record<string, any>
+      }): OrPromise<IOrArray<RequestHandler> | void>
+    }
+type OrExportDefault<T> =
+  | T
+  | {
+      default?: T
+    }
 
-  if ($boot.length >= 2) return [$boot]
-
-  const plugins =
-    $boot.length >= 3
-      ? $boot
-      : $boot({
-        app,
-        routes: app.routes
-      })
-
-  if (Array.isArray(plugins)) return plugins
-  else return [plugins]
+function bootIsRequestHandler(boot: BootCallback): boot is RequestHandler {
+  return boot.length >= 2
 }
 
-type IOrArray<T> = T | readonly T[]
-type BootCallback = (app: {
-  readonly app: Express
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly routes: Record<string, any>
-}) => IOrArray<RequestHandler> | void
+export default async function createBoot(
+  app: Express,
+  $boot?: OrExportDefault<ReturnType<typeof boot>>
+): Promise<Array<RequestHandler>> {
+  if (!$boot) return []
+
+  const bootFunction = typeof $boot === "function" ? $boot : $boot.default
+
+  if (!bootFunction) return [] // no export
+
+  if (bootIsRequestHandler(bootFunction)) return [bootFunction]
+
+  const bootReturn = await bootFunction({ app, routes: app.routes })
+
+  if (Array.isArray(bootReturn)) return bootReturn
+
+  if (!bootReturn) return []
+
+  return [bootReturn]
+}
 
 export function boot(callback: BootCallback): BootCallback {
   return callback

@@ -7,7 +7,7 @@ interface BootOption {
 }
 
 export default function renderBoot(
-  boot: (BootOption | string)[] = void 0,
+  boot: (BootOption | string)[] | void = void 0,
   isDev: boolean
 ) {
   // load boots;
@@ -39,10 +39,10 @@ ${boot
     `
 import { createBoot } from "epact"
 
-[...createBoot(app, ${bootNames.join(
-      "), ...createBoot(app, "
-    )})].forEach(boot => {
-  app.use(boot)
+[createBoot(app, ${bootNames.join(
+      "), createBoot(app, "
+    )})].forEach(async boots => {
+  (await boots).forEach(boot => app.use(boot))
 })
 `
   )
