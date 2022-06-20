@@ -298,7 +298,7 @@
     "@esbuild-kit/core-utils" "^1.3.0"
     get-tsconfig "^4.0.0"
 
-"@esbuild-kit/core-utils@^1.2.1", "@esbuild-kit/core-utils@^1.3.0", "@esbuild-kit/core-utils@^1.3.3":
+"@esbuild-kit/core-utils@^1.3.0", "@esbuild-kit/core-utils@^1.3.3":
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/@esbuild-kit/core-utils/-/core-utils-1.3.3.tgz#43c87d6990b989d0d42b3bf4a089cb5a8e30b97d"
   integrity sha512-LBpZunrStkP3N1qA+cTx+M4K1lpmJw9f0kqS1mauItjFqUbajCDON1ZXKm/kFYxR1/whsNvtU9Ohv8qhtrFR9w==
@@ -896,15 +896,6 @@ chokidar@^3.5.1, chokidar@^3.5.3:
   optionalDependencies:
     fsevents "~2.3.2"
 
-cjs-loader-fix@0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/cjs-loader-fix/-/cjs-loader-fix-0.0.2.tgz#1c78d0117574bebc1791459adfea15a6f80ee5fd"
-  integrity sha512-qu4xS/swImlP0oSHjv545BZxRZAkx7b1nus0WybXsciEFtH98PlhXE+OD2p33v6BwNb81S40qmpYar2vkJesSA==
-  dependencies:
-    "@esbuild-kit/core-utils" "^1.2.1"
-    get-tsconfig "^3.0.1"
-    tsconfig-paths "^4.0.0"
-
 clear-module@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/clear-module/-/clear-module-4.1.2.tgz#5a58a5c9f8dccf363545ad7284cad3c887352a80"
@@ -1454,11 +1445,6 @@ es-abstract@^1.19.0, es-abstract@^1.19.1, es-abstract@^1.19.2, es-abstract@^1.19
     string.prototype.trimstart "^1.0.5"
     unbox-primitive "^1.0.2"
 
-es-module-lexer@^0.10.5:
-  version "0.10.5"
-  resolved "https://registry.yarnpkg.com/es-module-lexer/-/es-module-lexer-0.10.5.tgz#06f76d51fa53b1f78e3bd8bb36dd275eda2fdd53"
-  integrity sha512-+7IwY/kiGAacQfY+YBhKMvEmyAJnw5grTUgjG85Pe7vcUI/6b7pZjZG8nQ7+48YhzEAEqrEgD2dCz/JIK+AYvw==
-
 es-shim-unscopables@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/es-shim-unscopables/-/es-shim-unscopables-1.0.0.tgz#702e632193201e3edf8713635d083d378e510241"
@@ -1917,16 +1903,6 @@ eslint@^8.16.0:
     text-table "^0.2.0"
     v8-compile-cache "^2.0.3"
 
-esm-loader-fix@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/esm-loader-fix/-/esm-loader-fix-0.0.7.tgz#b308fce8602b03ba7c17c9e926aa7454ab87e85f"
-  integrity sha512-gNR3vYK6DvLxdxXsaPQKSp/g60UFbqusIWuiIHHjTeD1XcaaroM8sBYyjLM8XLM4k40aqYm8DJH9owO6Ybid3Q==
-  dependencies:
-    "@esbuild-kit/core-utils" "^1.2.1"
-    es-module-lexer "^0.10.5"
-    get-tsconfig "^3.0.1"
-    tsconfig-paths "^4.0.0"
-
 espree@^9.3.2:
   version "9.3.2"
   resolved "https://registry.yarnpkg.com/espree/-/espree-9.3.2.tgz#f58f77bd334731182801ced3380a8cc859091596"
@@ -2240,11 +2216,6 @@ get-symbol-description@^1.0.0:
   dependencies:
     call-bind "^1.0.2"
     get-intrinsic "^1.1.1"
-
-get-tsconfig@^3.0.1:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/get-tsconfig/-/get-tsconfig-3.2.0.tgz#95d823dbddd22e139ed873b1ce41bccefc18001f"
-  integrity sha512-PChG1QIKJKpzrgR/wRhX5TWMKqH1cIHViJYDk0cjXhpwXFHIGGJiL5TXu/frupyetjXXxeDInWbP4vhvhHSBkg==
 
 get-tsconfig@^4.0.0:
   version "4.0.4"
@@ -2750,11 +2721,6 @@ json5@^1.0.1:
   integrity sha512-aKS4WQjPenRxiQsC93MNfjx+nbF4PAdYzmd/1JIj8HYzqfbu86beTuNgXDzPknWk0n0uARlyewZo4s++ES36Ow==
   dependencies:
     minimist "^1.2.0"
-
-json5@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.1.tgz#655d50ed1e6f95ad1a3caababd2b0efda10b395c"
-  integrity sha512-1hqLFMSrGHRHxav9q9gNjJ5EXznIxGVO09xQRrwplcS8qs28pZ8s8hupZAmqDwZUmVZ2Qb2jnyPOWcDH8m8dlA==
 
 jsonfile@^6.0.1:
   version "6.1.0"
@@ -3967,15 +3933,6 @@ tsconfig-paths@^3.14.1, tsconfig-paths@^3.9.0:
   dependencies:
     "@types/json5" "^0.0.29"
     json5 "^1.0.1"
-    minimist "^1.2.6"
-    strip-bom "^3.0.0"
-
-tsconfig-paths@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-4.0.0.tgz#1082f5d99fd127b72397eef4809e4dd06d229b64"
-  integrity sha512-SLBg2GBKlR6bVtMgJJlud/o3waplKtL7skmLkExomIiaAtLGtVsoXIqP3SYdjbcH9lq/KVv7pMZeCBpLYOit6Q==
-  dependencies:
-    json5 "^2.2.1"
     minimist "^1.2.6"
     strip-bom "^3.0.0"
 
