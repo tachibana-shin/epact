@@ -41,6 +41,7 @@
     "@types/express-serve-static-core": "^4.17.29",
     "@types/qs": "^6.9.7",
     "express": "^4.18.1",
+    "qs": "^6.10.5",
     "tsup": "^6.0.1",
     "vitest": "^0.13.1"
   },

@@ -1,7 +1,7 @@
 import AnsiConvert from "ansi-to-html"
 
 import createBoot, { boot } from "./createBoot"
-import createPage, { page, router } from "./createPage"
+import createPage, { page, RequestHandlerCustom, router } from "./createPage"
 import defineCatchError from "./defineCatchError"
 import defineConfig, { DefineConfig } from "./defineConfig"
 
@@ -14,5 +14,6 @@ export {
   page,
   router,
   DefineConfig,
-  AnsiConvert
+  AnsiConvert,
+  RequestHandlerCustom
 }

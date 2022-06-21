@@ -1,5 +1,13 @@
-import type { ErrorRequestHandler, RequestHandler } from "express"
+import type {
+  ErrorRequestHandler,
+  NextFunction,
+  Request,
+  RequestHandler,
+  Response
+} from "express"
 import { Router } from "express"
+import type { ParamsDictionary } from "express-serve-static-core"
+import type { ParsedQs } from "qs"
 
 import alwayIsArray from "./utils/alwayIsArray"
 
@@ -32,6 +40,27 @@ type Methods =
   | "unlock"
   | "unsubscribe"
 
+export interface RequestHandlerCustom<
+  P = ParamsDictionary,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ResBody = any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ReqBody = any,
+  ReqQuery = ParsedQs,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Locals extends Record<string, any> = Record<string, any>
+> {
+  (
+    req: Request<P, ResBody, ReqBody, ReqQuery, Locals>,
+    res: Response<ResBody, Locals>
+  ): void
+  (
+    req: Request<P, ResBody, ReqBody, ReqQuery, Locals>,
+    res: Response<ResBody, Locals>,
+    next: NextFunction
+  ): void
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function loadMiddleware(list?: any) {
   if (!list) return null
@@ -57,7 +86,7 @@ function loadArrayMiddleware(
   list: Middleware
 ): (RequestHandler | ErrorRequestHandler)[] {
   return (
-    alwayIsArray(list)
+    (alwayIsArray(list) as unknown as Middleware[])
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .filter(Boolean) as any
   )
@@ -123,20 +152,44 @@ export default function createPage(
     route[method as Methods](
       ...(middleware?.all || []),
       ...(middleware?.[method] || []),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...(alwayIsArray(($page as any)[method] ?? []) as any)
-        .map((item: Middleware) => {
-          if (typeof item === "string") return loadMiddleware(item)
-
-          return item
-        })
-        .flat(1)
+      ...alwayIsArray(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (($page as any)[method] ?? []) as unknown as RequestHandlerCustom
+      ).map((callback) => {
+        return createWrapRequestHandler(callback)
+      })
     )
   }
 
   return {
     prefix,
     router
+  }
+}
+
+function createWrapRequestHandler(
+  callback: RequestHandlerCustom
+): RequestHandler {
+  switch (callback.length) {
+    case 2:
+      return (req, res, next) => {
+        try {
+          callback(req, res)
+        } catch (err) {
+          next(err)
+        }
+      }
+    case 3:
+      return (req, res, next) => {
+        try {
+          callback(req, res, next)
+        } catch (err) {
+          next(err)
+        }
+      }
+
+    default:
+      return callback
   }
 }
 
@@ -155,9 +208,9 @@ function page(
             }
       } & {
         // eslint-disable-next-line no-unused-vars
-        [name in Methods]?: TypeOrArray<RequestHandler>
+        [name in Methods]?: TypeOrArray<RequestHandlerCustom>
       })
-    | RequestHandler
+    | RequestHandlerCustom
 ) {
   if (typeof opts === "function") {
     return {
