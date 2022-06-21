@@ -1,3 +1,5 @@
+import AnsiConvert from "ansi-to-html"
+
 import createBoot, { boot } from "./createBoot"
 import createPage, { page, router } from "./createPage"
 import defineCatchError from "./defineCatchError"
@@ -11,5 +13,6 @@ export {
   boot,
   page,
   router,
-  DefineConfig
+  DefineConfig,
+  AnsiConvert
 }

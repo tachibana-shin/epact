@@ -47,5 +47,8 @@
   "bugs": {
     "url": "https://github.com/tachibana-shin/epact/issues"
   },
-  "homepage": "https://github.com/tachibana-shin/epact#readme"
+  "homepage": "https://github.com/tachibana-shin/epact#readme",
+  "dependencies": {
+    "ansi-to-html": "^0.7.2"
+  }
 }
