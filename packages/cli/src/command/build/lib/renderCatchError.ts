@@ -33,6 +33,9 @@ app.use(plugins__catch_error)
 
   if (isDev) {
     return `import { inspect } from "util"
+import { AnsiConvert } from "epact"
+
+const ansiToHtml = new AnsiConvert()
 app.use((error, req, res, next) => {
   res.end(\`
 <!DOCTYPE html>
@@ -43,7 +46,7 @@ app.use((error, req, res, next) => {
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <code style="white-space: pre">\$\{inspect(error)\}</code>
+    <code style="white-space: pre">\$\{ansiToHtml.toHtml(inspect(error))\}</code>
   </body>
 </html>
 \`)
