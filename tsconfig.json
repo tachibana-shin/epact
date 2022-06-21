@@ -10,7 +10,7 @@
     "moduleResolution": "node",
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node", "vitest/globals"],
+    "types": ["vitest/globals"],
     "resolveJsonModule": true
   },
   "include": ["./packages/*/src/**/*.ts", "*.config.ts"],

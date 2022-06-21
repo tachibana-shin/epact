@@ -45,13 +45,8 @@ app.use((error, req, res, next) => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
-<<<<<<< HEAD
   <body class="background-color: #111; color: #eee">
     <code style="white-space: pre">\$\{ansiToHtml.toHtml(inspect(error, { showHidden: false, depth: null, colors: true }))\}</code>
-=======
-  <body>
-    <code style="white-space: pre">\$\{ansiToHtml.toHtml(inspect(error))\}</code>
->>>>>>> 366619722c6fe1b17f4786db1fd29f8082186b45
   </body>
 </html>
 \`)
