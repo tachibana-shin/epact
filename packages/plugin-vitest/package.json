@@ -2,7 +2,7 @@
   "name": "@epact/plugin-vitest",
   "description": "Plugin tester epact for vitest",
   "author": "Tachibana Shin",
-  "version": "0.0.9-beta.29",
+  "version": "0.0.9-beta.30",
   "main": "./dist/index.js",
   "private": false,
   "publishConfig": {
