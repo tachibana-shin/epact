@@ -19,6 +19,9 @@ app.use("/", createPage("/", page___src_pages_index_ts).router);
 app.use("/", createPage("/:id", page___src_pages__id_index_ts).router);
 app.use("/", createPage("/manga/chap-:chap?", page___src_pages_manga_chap__chap_ts).router);
 import { inspect } from "util"
+import { AnsiConvert } from "epact"
+
+const ansiToHtml = new AnsiConvert()
 app.use((error, req, res, next) => {
   res.end(`
 <!DOCTYPE html>
@@ -28,8 +31,8 @@ app.use((error, req, res, next) => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
-  <body>
-    <code style="white-space: pre">${inspect(error)}</code>
+  <body class="background-color: #111; color: #eee">
+    <code style="white-space: pre">${ansiToHtml.toHtml(inspect(error, { showHidden: false, depth: null, colors: true }))}</code>
   </body>
 </html>
 `)

@@ -16,6 +16,7 @@ export default router<{
   };
 }>({
   get(req, res) {
+    console.log(req.params)
     res.json({
       message: req.params.id,
     });
