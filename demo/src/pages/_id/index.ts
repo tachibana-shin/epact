@@ -1,24 +1,13 @@
-import { router } from "epact";
+import { router, useRoute } from "epact"
 
-export default router<{
-  // eslint-disable-next-line functional/prefer-readonly-type
-  get: {
-    // eslint-disable-next-line functional/prefer-readonly-type
-    params: {
-      // eslint-disable-next-line functional/prefer-readonly-type
-      id: number;
-    };
-    // eslint-disable-next-line functional/prefer-readonly-type
-    body: {
-      // eslint-disable-next-line functional/prefer-readonly-type
-      message: string;
-    };
-  };
-}>({
+export default router({
   get(req, res) {
     console.log(req.params)
+
+    console.log(useRoute())
+
     res.json({
-      message: req.params.id,
-    });
-  },
-});
+      message: req.params.id
+    })
+  }
+})
