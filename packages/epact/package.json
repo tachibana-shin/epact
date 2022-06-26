@@ -2,7 +2,7 @@
   "name": "epact",
   "description": "EPACT (Express Package Advanced Typescript)",
   "author": "Tachibana Shin",
-  "version": "0.0.9-beta.32",
+  "version": "0.0.9-beta.33",
   "main": "./dist/index.js",
   "private": false,
   "publishConfig": {
