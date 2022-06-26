@@ -12,12 +12,13 @@ import { Router } from "express"
 import type { CookieOptions, ParamsDictionary } from "express-serve-static-core"
 import type { ParsedQs } from "qs"
 
+import { setCurrentRequest } from "./useApi/useRequest"
 import alwayIsArray from "./utils/alwayIsArray"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AllOfArray<T> = T extends any[] ? T : T[]
 type Middleware = AllOfArray<RequestHandler | ErrorRequestHandler>
-type Methods =
+export type Methods =
   | "all"
   | "checkout"
   | "copy"
@@ -216,7 +217,7 @@ export type RequestHandlerCustom<
   Locals = Record<string, unknown>
 > = (
   this: Request<
-    Partial<P>,
+    P,
     ResBody,
     ReqBody extends object ? Partial<ReqBody> : ReqBody,
     Partial<FixArrayQs<ReqQuery>>,
@@ -228,7 +229,7 @@ export type RequestHandlerCustom<
     ) => D
   },
   req: Request<
-    Partial<P>,
+    P,
     ResBody,
     ReqBody extends object ? Partial<ReqBody> : ReqBody,
     Partial<ReqQuery>,
@@ -242,10 +243,7 @@ export type RequestHandlerCustom<
 function loadMiddleware(list?: any) {
   if (!list) return null
 
-  if (
-    typeof list === "function" ||
-    Array.isArray(list)
-  ) {
+  if (typeof list === "function" || Array.isArray(list)) {
     list = {
       all: list
     }
@@ -350,6 +348,7 @@ function createWrapRequestHandler(
 ): RequestHandler {
   if (callback.length <= 3) {
     return async (req, res, next) => {
+      setCurrentRequest(req)
       // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
       if (!(req as any).return) (req as unknown as any).return = noop
 
@@ -373,14 +372,24 @@ interface OptsMethod {
   data?: unknown
   locals?: Record<string, unknown>
 }
+
 function page<
+  OptsCustom extends {
+    params?: Record<string, string> | string
+    query?: ParsedQs
+  } & {
+    // eslint-disable-next-line no-unused-vars
+    [name in Methods]?: OptsMethod
+  },
   Opts extends {
     params?: Record<string, string> | string
     query?: ParsedQs
   } & {
     // eslint-disable-next-line no-unused-vars
     [name in Methods]?: OptsMethod
-  }
+  } = Record<Methods, OptsMethod> & {
+    params: unknown
+  } & OptsCustom
 >(
   opts:
     | ({
@@ -393,10 +402,11 @@ function page<
               >
             }
       } & {
-        [name in Exclude<keyof Opts, "params" | "query">]: TypeOrArray<
+        [name in Exclude<keyof Opts, "params" | "query"> &
+          Methods]?: TypeOrArray<
           RequestHandlerCustom<
             Opts["params"] extends infer R extends string
-              ? Record<R, string>
+              ? Readonly<Record<R, string>>
               : Opts["params"],
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
