@@ -1,4 +1,6 @@
-import toArray from "./toArray"
-import toItem from "./toItem"
+import toArray from "./libs/toArray"
+import toArrayNumber from "./libs/toArrayNumber"
+import toItem from "./libs/toItem"
+import toNumber from "./libs/toNumber"
 
-export { toArray, toItem }
+export { toArray, toArrayNumber, toItem, toNumber }
