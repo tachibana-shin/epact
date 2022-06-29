@@ -120,7 +120,7 @@ function isDependencyPath(data: any): data is {
 function startApp(cwd: string) {
   // if (clear) process.stdout.write("\u001Bc");
 
-  const fileMain = join(cwd, `.express/main.ts`)
+  const fileMain = join(cwd, ".express/main.ts")
 
   // process.stdout.write(
   //   chalk.bgBlue("express:start") +

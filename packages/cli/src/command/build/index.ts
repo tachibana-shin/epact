@@ -39,7 +39,10 @@ export default async function (
   renderFileApp(config, false, options.systemless || undefined)
 
   const banner = toAppend(config.build?.banner)
+
   const footer = toAppend(config.build?.footer)
+
+  const outDir = config.build?.outDir ?? "dist"
 
   await build({
     entry: [join(pathToDir, `.express/main.ts`)],
@@ -47,7 +50,7 @@ export default async function (
     clean: true,
     // ...config.build,
     watch: config.build?.watch,
-    outDir: config.build?.outDir ?? "dist",
+    outDir,
     keepNames: config.build?.keepNames,
     target: config.build?.target ?? "node16",
     ignoreWatch: config.build?.ignoreWatch,
@@ -88,37 +91,36 @@ export default async function (
   if (config.build?.filepath) {
     console.log(
       chalk.green("EPC ") +
-        `Rename ${join(config.build?.outDir ?? "dist", "main.js")} to ${join(
-          config.build?.outDir ?? "dist",
-          config.build.filepath
+        `Rename ${chalk.bold(join(outDir, "main.js"))} -> ${chalk.bold(
+          join(outDir, config.build.filepath)
         )}`
     )
   }
 
   await Promise.all([
-    config.build?.pkgFile ? buildFilePkgJSON(pathToDir) : void 0,
-    copyFilesInPublic(pathToDir)
+    config.build?.pkgFile ? buildFilePkgJSON(pathToDir, outDir) : void 0,
+    copyFilesInPublicExtra(pathToDir, outDir)
   ])
 }
 
-async function buildFilePkgJSON(cwd: string) {
+async function buildFilePkgJSON(cwd: string, outDir: string) {
   const { dependencies } = JSON.parse(
     await readFile(join(cwd, "package.json"), "utf8")
   )
 
   await writeFile(
-    join(cwd, "dist/package.json"),
+    join(cwd, outDir, "package.json"),
     JSON.stringify({ dependencies }, (k, v) => v, 2)
   )
 }
-async function copyFilesInPublic(cwd: string) {
-  const pub = join(cwd, "public")
+async function copyFilesInPublicExtra(cwd: string, outDir: string) {
+  const pub = join(cwd, "public-extra")
 
   if (!existsSync(pub)) return
 
   await Promise.all(
     readdirSync(pub).map((filename) => {
-      return copy(join(pub, filename), join(cwd, "dist", filename))
+      return copy(join(pub, filename), join(cwd, outDir, filename))
     })
   )
 }
