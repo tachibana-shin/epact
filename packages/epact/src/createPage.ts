@@ -369,19 +369,18 @@ interface OptsMethod {
   body?: unknown
   data?: unknown
   locals?: Record<string, unknown>
+  query?: ParsedQs | string
 }
 
 function page<
   OptsCustom extends {
     params?: Record<string, string> | string
-    query?: ParsedQs
   } & {
     // eslint-disable-next-line no-unused-vars
     [name in Methods]?: OptsMethod
   },
   Opts extends {
     params?: Record<string, string> | string
-    query?: ParsedQs
   } & {
     // eslint-disable-next-line no-unused-vars
     [name in Methods]?: OptsMethod
@@ -411,8 +410,18 @@ function page<
             Opts[name]["data"],
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
-            Opts[name]["body"],
-            Opts["query"],
+            Opts[name]["body"] extends infer R extends string
+              ? Readonly<Record<R, string | string[]>>
+              : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                Opts[name]["body"],
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            Opts[name]["query"] extends infer R extends string
+              ? Readonly<Record<R, string | string[]>>
+              : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                Opts[name]["query"],
             Record<string, unknown>
           >
         >
