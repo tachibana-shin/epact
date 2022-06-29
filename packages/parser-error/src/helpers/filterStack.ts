@@ -9,13 +9,13 @@ import { stringifyStackLine } from "./stringifyStackLine"
 
 export function filterStack(
   stackLines: string[],
-  exclude: (stack: ReturnType<typeof parseStackLine>) => boolean,
+  exclude: (stack: Exclude<ReturnType<typeof parseStackLine>, null>) => boolean,
   cwd: string
 ): string[] {
   return filterBreak(stackLines, (stackLine) => {
     const stack = parseStackLine(stackLine)
 
-    if (exclude(stack)) return false
+    if (!stack || exclude(stack)) return false
 
     // eslint-disable-next-line functional/immutable-data
     stack.file = relative(cwd, stack.file)
