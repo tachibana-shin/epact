@@ -50,6 +50,8 @@
   },
   "homepage": "https://github.com/tachibana-shin/epact#readme",
   "dependencies": {
-    "ansi-to-html": "^0.7.2"
+    "@epact/helpers": "link:../helpers",
+    "ansi-to-html": "^0.7.2",
+    "cspell": "^6.1.3"
   }
 }

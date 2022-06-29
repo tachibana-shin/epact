@@ -224,9 +224,7 @@ export type RequestHandlerCustom<
     Locals
   > & {
     res: Response<ResBody, Locals>
-    return: <D extends ResponseData<ResBody, number, Locals> | void>(
-      data: D
-    ) => D
+    r: <D extends ResponseData<ResBody, number, Locals> | void>(data: D) => D
   },
   req: Request<
     P,
@@ -350,7 +348,7 @@ function createWrapRequestHandler(
     return async (req, res, next) => {
       setCurrentRequest(req)
       // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
-      if (!(req as any).return) (req as unknown as any).return = noop
+      if (!(req as any).return) (req as unknown as any).r = noop
 
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

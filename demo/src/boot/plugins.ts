@@ -12,7 +12,6 @@ export default boot(() => {
     express.urlencoded({ extended: true }),
     express.json(),
     (req, res, next) => {
-      console.log("call")
       req.user = "shin"
       next()
     }

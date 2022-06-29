@@ -37,6 +37,7 @@ app.use((error, req, res, next) => {
 </html>
 `)
   next()
+  throw error
 })
 if (process.env.NODE_ENV?.toLowerCase() !== "test" && process.env.MODE !== "test" && process.env.TEST !== "true") {
   const timeStart = Date.now()

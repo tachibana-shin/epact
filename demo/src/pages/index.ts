@@ -1,30 +1,21 @@
-import { router ,useRoute } from "epact"
+import { router, useRoute, useQuery } from "epact"
 
-export default router<{
-  params: "page" | "query"
-  query: {
-    q: string[]
-  }
-  get: {
-    data: {
-      message: string
-    }
-    body: {
-      username: string
-      password: string
-    }
-  }
-}>({
+export default router({
   async get() {
-    this.params.page
-    console.log(this.params.query)
-    console.log(this.query.q)
-    console.log(this.body.username)
+    console.time()
+    ;(this.query.page)
+    console.timeEnd()
 
-    console.log(useRoute().stack[0].handle.toString())
+    console.time("with useQuery")
 
-    return this.return({
-      message: "Hello world"
+    new Proxy(this.query, {}).page
+
+    console.timeEnd("with useQuery")
+
+    return this.r({
+      data: {
+        ok: true
+      }
     })
   }
 })
