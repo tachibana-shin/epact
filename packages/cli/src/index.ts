@@ -1,4 +1,5 @@
 #!/bin/env node
+// eslint-disable-next-line n/shebang
 import { program } from "commander"
 
 import build from "./command/build"

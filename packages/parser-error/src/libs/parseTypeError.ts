@@ -1,4 +1,3 @@
-import chalk from "chalk"
 import { cwd } from "process"
 
 import { ErrorNoWatashi } from "../ErrorNoWatashi"
@@ -37,7 +36,6 @@ export function parseTypeError(messageError: string): ErrorNoWatashi | null {
   const lineInfoColumn = findColumnError(messageSplitted, 1)
   if (lineInfoColumn === -1) return null
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const rg = messageSplitted[lineInfoColumn].match(/\^+/)
   if (!rg) return null
 
