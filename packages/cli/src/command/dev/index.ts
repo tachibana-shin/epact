@@ -74,14 +74,9 @@ export default async function dev() {
   }).on("change", async (path) => {
     process.stdout.write("\u001Bc")
     process.stdout.write(
-      chalk.green(
-        `╔════════════════════════════════════════════╗
-║                                            ║
-║    File "${basename(path)}" changed.       ║
-║                                            ║
-╚════════════════════════════════════════════╝`
-      )
+      ` > Changed: ${chalk.bold(chalk.green(basename(path)))}\n`
     )
+
     config = await loadExpressConfig()
     noClearConsole = true
     buildFileMain(config, true)
@@ -94,9 +89,7 @@ export default async function dev() {
     process.stdout.write("\u001Bc")
     // dir src/pages changed;
     process.stdout.write(
-      chalk.gray(
-        `======> ${relative(join(cwd, "src"), path)} ${action} <======`
-      )
+      chalk.gray(` > ${relative(join(cwd, "src"), path)} ${action}`)
     )
     noClearConsole = true
     buildFileMain(config, true)
@@ -124,10 +117,7 @@ function isDependencyPath(data: any): data is {
   return data && "type" in data && data.type === "dependency"
 }
 
-function startApp(
-  cwd: string,
-  filename = "main.ts"
-) {
+function startApp(cwd: string, filename = "main.ts") {
   // if (clear) process.stdout.write("\u001Bc");
 
   const fileMain = join(cwd, `.express/${filename}`)
@@ -145,15 +135,19 @@ function startApp(
 
     runProcess = spawn(
       process.execPath,
-      ["--loader", "@esbuild-kit/esm-loader", "--require", "@esbuild-kit/cjs-loader", fileMain],
+      [
+        "--loader",
+        "@esbuild-kit/esm-loader",
+        "--require",
+        "@esbuild-kit/cjs-loader",
+        fileMain
+      ],
       {
         stdio: ["inherit", "inherit", "pipe", "ipc"]
       }
     )
-    
-    runProcess.stderr
-      ?.pipe(createFilterNodeWarn())
-      .pipe(process.stderr)
+
+    runProcess.stderr?.pipe(createFilterNodeWarn()).pipe(process.stderr)
 
     runProcess.on("message", (data) => {
       // Collect run-time dependencies to watch
