@@ -1,3 +1,4 @@
+#!/bin/env node
 import { program } from "commander"
 
 import build from "./command/build"
@@ -91,11 +92,8 @@ program
   .description("Start app in development debug")
   .option("--node-warn", "show node warning")
   .option("--esbuild-trace", "show esbuild trace")
-  .action((options) => {
-    dev({
-      nodeWarn: options["node-warn"] ?? false,
-      esbuildTrace: options["esbuild-trace"] ?? false
-    })
+  .action(() => {
+    dev()
   })
 program
   .command("test <test_runner...>")

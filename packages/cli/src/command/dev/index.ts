@@ -57,16 +57,13 @@ function buildFileMain(
 
 // eslint-disable-next-line functional/no-let
 let noClearConsole = false
-export default async function dev(options: {
-  readonly nodeWarn: boolean
-  readonly esbuildTrace: boolean
-}) {
+export default async function dev() {
   const cwd = process.cwd()
   // eslint-disable-next-line functional/no-let
   let config = await loadExpressConfig()
 
   buildFileMain(config, false)
-  startApp(cwd, config.filename, options.esbuildTrace, options.nodeWarn)
+  startApp(cwd, config.filename)
 
   const pathExpressConfig = getFilepathExpressConfig()
 
@@ -129,9 +126,7 @@ function isDependencyPath(data: any): data is {
 
 function startApp(
   cwd: string,
-  filename = "main.ts",
-  ESBuildWarn: boolean,
-  nodeWarn: boolean
+  filename = "main.ts"
 ) {
   // if (clear) process.stdout.write("\u001Bc");
 
@@ -155,9 +150,9 @@ function startApp(
         stdio: ["inherit", "inherit", "pipe", "ipc"]
       }
     )
-
+    
     runProcess.stderr
-      ?.pipe(createFilterNodeWarn(!ESBuildWarn, !nodeWarn))
+      ?.pipe(createFilterNodeWarn())
       .pipe(process.stderr)
 
     runProcess.on("message", (data) => {

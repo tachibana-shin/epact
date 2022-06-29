@@ -1,0 +1,51 @@
+{
+  "name": "@epact/parser-error",
+  "description": "EPACT (Express Package Advanced Typescript)",
+  "author": "Tachibana Shin",
+  "version": "0.0.9-beta.34",
+  "main": "./dist/index.js",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tachibana-shin/epact.git"
+  },
+  "license": "MIT",
+  "keywords": [],
+  "scripts": {
+    "build": "tsup-node",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest",
+    "prepublishOnly": "pnpm test && pnpm build"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "devDependencies": {
+    "tsup": "^6.0.1",
+    "vitest": "^0.13.1"
+  },
+  "bugs": {
+    "url": "https://github.com/tachibana-shin/epact/issues"
+  },
+  "homepage": "https://github.com/tachibana-shin/epact#readme",
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "cli-highlight": "^2.1.11"
+  }
+}

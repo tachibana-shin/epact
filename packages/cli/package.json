@@ -43,7 +43,8 @@
     "globby": "^13.1.1",
     "joycon": "^3.1.1",
     "semver": "^7.3.7",
-    "tsup": "^6.0.1"
+    "tsup": "^6.0.1",
+    "@epact/parser-error": "link:../parser-error"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",

@@ -51,6 +51,7 @@ app.use((error, req, res, next) => {
 </html>
 \`)
   next()
+  throw error
 })`
   }
 

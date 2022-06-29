@@ -1,22 +1,21 @@
 import { Transform } from "stream"
 import { inspect } from "util"
 
-import parseError from "./helpers/parseError"
+import { parseESBuildError, parseTypeError } from "@epact/parser-error"
+
 import parseWarning from "./helpers/parseWarning"
 
 const warningTraceTip =
   "(Use `node --trace-warnings ...` to show where the warning was created)"
 const nodeWarningPattern = /^\(node:\d+\) (.+)\n/m
 
-export default function createFilterNodeWarn(
-  hiddenESBuild: boolean,
-  hiddenNodeWarn: boolean
-) {
-  const warningsToIgnore = [
-    "ExperimentalWarning: --experimental-loader is an experimental feature. This feature could change at any time",
-    "ExperimentalWarning: Custom ESM Loaders is an experimental feature. This feature could change at any time",
-    "ExperimentalWarning: Importing JSON modules is an experimental feature. This feature could change at any time"
-  ]
+const warningsToIgnore = [
+  "ExperimentalWarning: --experimental-loader is an experimental feature. This feature could change at any time",
+  "ExperimentalWarning: Custom ESM Loaders is an experimental feature. This feature could change at any time",
+  "ExperimentalWarning: Importing JSON modules is an experimental feature. This feature could change at any time"
+]
+
+export default function createFilterNodeWarn() {
   // eslint-disable-next-line functional/no-let
   let filterStderr = true
   // eslint-disable-next-line functional/no-let
@@ -24,11 +23,24 @@ export default function createFilterNodeWarn(
 
   return new Transform({
     transform(chunk, encode, cb) {
-      const err = parseError(chunk.toString(), hiddenESBuild)
+      const err = parseESBuildError(chunk.toString())
 
       if (err) {
         process.stderr.write(
           inspect(err, { showHidden: false, depth: null, colors: true })
+        )
+
+        cb(null, null)
+
+        return
+      }
+
+      const typeErr = parseTypeError(chunk.toString())
+
+      if (typeErr) {
+        process.stderr.write("\n")
+        process.stderr.write(
+          inspect(typeErr, { showHidden: false, depth: null, colors: true })
         )
 
         cb(null, null)
@@ -59,7 +71,7 @@ export default function createFilterNodeWarn(
         }
       }
 
-      const warn = parseWarning(chunk.toString(), hiddenNodeWarn)
+      const warn = parseWarning(chunk.toString())
 
       if (warn === false) {
         cb(null, null)
