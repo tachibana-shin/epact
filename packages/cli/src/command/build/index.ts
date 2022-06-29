@@ -85,7 +85,7 @@ export default async function (
 
   await Promise.all([
     config.build?.pkgFile ? buildFilePkgJSON(pathToDir) : void 0,
-    copyFilesInPublish(pathToDir)
+    copyFilesInPublic(pathToDir)
   ])
 }
 
@@ -99,14 +99,14 @@ async function buildFilePkgJSON(cwd: string) {
     JSON.stringify({ dependencies }, (k, v) => v, 2)
   )
 }
-async function copyFilesInPublish(cwd: string) {
-  const publish = join(cwd, "publish")
+async function copyFilesInPublic(cwd: string) {
+  const pub = join(cwd, "public")
 
-  if (!existsSync(publish)) return
+  if (!existsSync(pub)) return
 
   await Promise.all(
-    readdirSync(publish).map((filename) => {
-      return copy(join(publish, filename), join(cwd, "dist", filename))
+    readdirSync(pub).map((filename) => {
+      return copy(join(pub, filename), join(cwd, "dist", filename))
     })
   )
 }
