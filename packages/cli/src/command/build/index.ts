@@ -1,7 +1,7 @@
 import { existsSync, readdirSync } from "fs"
 import { readFile, writeFile } from "fs/promises"
 import { join } from "path"
-import { copy } from "fs-extra"
+import { copy, move } from "fs-extra"
 
 import type { Options } from "tsup"
 import { build } from "tsup"
@@ -89,18 +89,24 @@ export default async function (
   })
 
   if (config.build?.filepath) {
+    const [from, to] = [
+      join(outDir, "main.js"),
+
+      join(outDir, config.build.filepath)
+    ]
     console.log(
-      chalk.green("EPC ") +
-        `Rename ${chalk.bold(join(outDir, "main.js"))} -> ${chalk.bold(
-          join(outDir, config.build.filepath)
-        )}`
+      chalk.green("EPC ") + `Rename ${chalk.bold(from)} -> ${chalk.bold(to)}`
     )
+    await move(from, to)
+  }
+  if (config.build?.pkgFile) {
+    console.log(
+      chalk.green("EPC ") + `${chalk.bold(join(outDir, "package.json"))}`
+    )
+    await buildFilePkgJSON(pathToDir, outDir)
   }
 
-  await Promise.all([
-    config.build?.pkgFile ? buildFilePkgJSON(pathToDir, outDir) : void 0,
-    copyFilesInPublicExtra(pathToDir, outDir)
-  ])
+  await copyFilesInPublicExtra(pathToDir, outDir)
 }
 
 async function buildFilePkgJSON(cwd: string, outDir: string) {
