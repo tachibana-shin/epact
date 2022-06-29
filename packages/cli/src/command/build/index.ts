@@ -9,6 +9,7 @@ import { build } from "tsup"
 import loadExpressConfig from "../../utils/loadExpressConfig"
 
 import renderFileApp from "./renderFileApp"
+import chalk from "chalk"
 
 function toAppend(
   apper?: string | Record<string, string>
@@ -41,22 +42,23 @@ export default async function (
   const footer = toAppend(config.build?.footer)
 
   await build({
-    entry: [join(pathToDir, `.express/${config.filename ?? "main.ts"}`)],
+    entry: [join(pathToDir, `.express/main.ts`)],
     splitting: true,
     clean: true,
     // ...config.build,
     watch: config.build?.watch,
-    outDir: config.build?.outDir,
+    outDir: config.build?.outDir ?? "dist",
     keepNames: config.build?.keepNames,
-    target: config.build?.target,
+    target: config.build?.target ?? "node16",
     ignoreWatch: config.build?.ignoreWatch,
     onSuccess: config.build?.onSuccess,
     inject: config.build?.inject,
     external: config.build?.external,
-    jsxFactory: config.build?.jsxFactory,
-    jsxFragment: config.build?.jsxFragment,
+    jsxFactory: config.build?.jsxFactory ?? "React.createElement",
+    jsxFragment: config.build?.jsxFragment ?? "React.Fragment",
     silent: config.build?.silent,
     metafile: config.build?.metafile,
+    platform: "node",
     ...options,
     loader: config.loader,
     minify: !(options["no-minify"] || config.build?.noMinify || options.debug),
@@ -82,6 +84,16 @@ export default async function (
       config.build?.esbuildOptions?.(options, context)
     }
   })
+
+  if (config.build?.filepath) {
+    console.log(
+      chalk.green("EPC ") +
+        `Rename ${join(config.build?.outDir ?? "dist", "main.js")} to ${join(
+          config.build?.outDir ?? "dist",
+          config.build.filepath
+        )}`
+    )
+  }
 
   await Promise.all([
     config.build?.pkgFile ? buildFilePkgJSON(pathToDir) : void 0,

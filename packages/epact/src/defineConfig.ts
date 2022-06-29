@@ -8,7 +8,6 @@ interface BootOption {
 
 export interface DefineConfig {
   baseUrl?: string
-  filename?: string
   footer?: string
   port?: number
   boot?: (string | BootOption)[]
@@ -30,6 +29,7 @@ export interface DefineConfig {
     systemless?: boolean
     watch?: boolean
     outDir?: string
+    filepath?: string
     format?: Format | Format[]
     noMinify?: boolean
     keepNames?: boolean

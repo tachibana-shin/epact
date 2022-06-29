@@ -17,15 +17,15 @@ program
     // prettier-ignore
     "Watch mode, if path is not specified, it watches the current folder \".\". Repeat \"--watch\" for more than one path"
   )
-  .option("-d, --out-dir <dir>", "Output directory", "dist")
+  .option("-d, --out-dir <dir>", "Output directory")
   // prettier-ignore
-  .option("--format <format>", "Bundle format, \"cjs\", \"esm\"", "cjs")
+  .option("--format <format>", "Bundle format, \"cjs\", \"esm\"")
   .option("--no-minify", "Turn off minify")
   .option(
     "--keep-names",
     "Keep original function and class names in minified code"
   )
-  .option("--target <target>", "Bundle target, \"es20XX\" or \"esnext\"", "node16")
+  .option("--target <target>", "Bundle target, \"es20XX\" or \"esnext\"")
   .option(
     "--sourcemap [inline]",
     "Generate external sourcemap, or inline source: --sourcemap inline"
@@ -44,13 +44,11 @@ program
   .option("--external <name>", "Mark specific packages as external")
   .option(
     "--jsxFactory <jsxFactory>",
-    "Name of JSX factory function",
-    "React.createElement"
+    "Name of JSX factory function"
   )
   .option(
     "--jsxFragment <jsxFragment>",
-    "Name of JSX fragment function",
-    "React.Fragment"
+    "Name of JSX fragment function"
   )
   .option("--no-splitting", "Disable code splitting")
 
@@ -61,7 +59,7 @@ program
   )
   .option("--pure <express>", "Mark specific expressions as pure")
   .option("--metafile", "Emit esbuild metafile (a JSON file)")
-  .option("--platform <platform>", "Target platform", "node")
+  .option("--platform <platform>", "Target platform")
   .option("-dg, --debug", "Enable mode debug. Build sourcemap and no minify")
   .action((options) => {
     if (typeof options.format === "string") {

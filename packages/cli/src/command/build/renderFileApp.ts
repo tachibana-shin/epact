@@ -39,7 +39,7 @@ export default function renderFileApp(
     mkdirSync(join(pathToDir, ".express"))
 
   writeFileSync(
-    join(pathToDir, `.express/${config.filename ?? "main.ts"}`),
+    join(pathToDir, `.express/main.ts`),
     code
   )
 }

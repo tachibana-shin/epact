@@ -63,7 +63,7 @@ export default async function dev() {
   let config = await loadExpressConfig()
 
   buildFileMain(config, false)
-  startApp(cwd, config.filename)
+  startApp(cwd)
 
   const pathExpressConfig = getFilepathExpressConfig()
 
@@ -117,10 +117,10 @@ function isDependencyPath(data: any): data is {
   return data && "type" in data && data.type === "dependency"
 }
 
-function startApp(cwd: string, filename = "main.ts") {
+function startApp(cwd: string) {
   // if (clear) process.stdout.write("\u001Bc");
 
-  const fileMain = join(cwd, `.express/${filename}`)
+  const fileMain = join(cwd, `.express/main.ts`)
 
   // process.stdout.write(
   //   chalk.bgBlue("express:start") +
