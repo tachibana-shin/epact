@@ -1,4 +1,7 @@
 # EPACT (Express Package Advanced Typescript)
+This library provides you a compiler for node server. it compiles your code to a javascript file to run
+
+Using `esbuild` allows you to use typescript without any server lag
 
 ## Usage
 ``` bash
